@@ -1,0 +1,126 @@
+Query: 1
+Method: LSH
+HashFunction: LSH
+Found Nearest Neighbor: 12
+distanceFound: 204.407
+
+Query: 2
+Method: LSH
+HashFunction: LSH
+Found Nearest Neighbor: 12
+distanceFound: 177.362
+
+Query: 3
+Method: LSH
+HashFunction: LSH
+Found Nearest Neighbor: 8
+distanceFound: 6.26657
+
+Query: 4
+Method: LSH
+HashFunction: LSH
+Found Nearest Neighbor: 12
+distanceFound: 142.043
+
+Query: 5
+Method: LSH
+HashFunction: LSH
+Found Nearest Neighbor: 12
+distanceFound: 176.278
+
+Query: 6
+Method: LSH
+HashFunction: LSH
+Found Nearest Neighbor: 12
+distanceFound: 124.432
+
+Query: 7
+Method: LSH
+HashFunction: LSH
+Found Nearest Neighbor: 12
+distanceFound: 126.113
+
+Query: 8
+Method: LSH
+HashFunction: LSH
+Found Nearest Neighbor: 8
+distanceFound: 1.59802
+
+Query: 9
+Method: LSH
+HashFunction: LSH
+Found Nearest Neighbor: 38
+distanceFound: 174.386
+
+Query: 10
+Method: LSH
+HashFunction: LSH
+Found Nearest Neighbor: 12
+distanceFound: 141.093
+
+Query: 11
+Method: LSH
+HashFunction: LSH
+Found Nearest Neighbor: 21
+distanceFound: 40.5151
+
+Query: 12
+Method: LSH
+HashFunction: LSH
+Found Nearest Neighbor: 8
+distanceFound: 3
+
+Query: 13
+Method: LSH
+HashFunction: LSH
+Found Nearest Neighbor: 12
+distanceFound: 127.426
+
+Query: 14
+Method: LSH
+HashFunction: LSH
+Found Nearest Neighbor: 8
+distanceFound: 90.4315
+
+Query: 15
+Method: LSH
+HashFunction: LSH
+Found Nearest Neighbor: 8
+distanceFound: 66.6705
+
+Query: 16
+Method: LSH
+HashFunction: LSH
+Found Nearest Neighbor: 8
+distanceFound: 62.7765
+
+Query: 17
+Method: LSH
+HashFunction: LSH
+Found Nearest Neighbor: 8
+distanceFound: 8.25049
+
+Query: 18
+Method: LSH
+HashFunction: LSH
+Found Nearest Neighbor: 8
+distanceFound: 75.9197
+
+Query: 19
+Method: LSH
+HashFunction: LSH
+Found Nearest Neighbor: 8
+distanceFound: 10.2992
+
+Query: 20
+Method: LSH
+HashFunction: LSH
+Found Nearest Neighbor: 8
+distanceFound: 125.914
+
+Query: 21
+Method: LSH
+HashFunction: LSH
+Found Nearest Neighbor: 8
+distanceFound: 17.2443
+
