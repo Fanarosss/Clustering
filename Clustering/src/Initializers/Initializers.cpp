@@ -28,7 +28,7 @@ string Random_Selection<Point>::get_name() {
 
 template <class Point>
 vector<int>* KMeans_plusplus<Point>::init(vector<vector<Point>>* dataset) {
-    cout << '\t' << "Initializing with K-Means++" << endl;
+    cout << "Initializing with K-Means++" << endl;
     /* # of centroids */
     int t = 1;
     /* # of data */

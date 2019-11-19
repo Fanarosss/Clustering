@@ -16,7 +16,6 @@ vector<int>** Lloyd_assignment<Point>::assign(vector<vector<Point>>* dataset, ve
         clusters[i] = new vector<int>;
     int centroid;
     double min_dist, curr_dist;
-    cout << num_of_centroids << endl << data_size << endl << dimension <<endl;
     for (int i = 0; i < data_size; i++) {
         if (find(centroids->begin(), centroids->end(), i) != centroids->end()) continue;
         centroid = -1;

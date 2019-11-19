@@ -10,7 +10,7 @@ protected:
     int K;
 public:
     Updater(){}
-    virtual void update(vector<vector<Point>>*, vector<int>**, vector<int>*) {}
+    virtual int update(vector<vector<Point>>*, vector<int>**, vector<int>*) {return 0;}
     virtual string get_name() {}
     virtual int get_K() {return K;}
 };
@@ -21,7 +21,7 @@ private:
     string name = "Partitioning Around Medoids (PAM)";
 public:
     PAM(int K){this->K = K;}
-    void update(vector<vector<Point>>*, vector<int>**, vector<int>*);
+    int update(vector<vector<Point>>*, vector<int>**, vector<int>*);
     string get_name();
 };
 
@@ -31,6 +31,6 @@ private:
     string name = "Mean Vector - DTW centroid Curve";
 public:
     MV_DTW(int K){this->K = K;}
-    void update(vector<vector<Point>>*, vector<int>**, vector<int>*);
+    int update(vector<vector<Point>>*, vector<int>**, vector<int>*);
     string get_name();
 };

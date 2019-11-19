@@ -5,16 +5,19 @@
 using namespace std;
 
 template <class Point>
-void PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, vector<int>* centroids) {
+int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, vector<int>* centroids) {
+    /* todo: sometimes segmentation -> maybe at empty clusters */
     /* minimize Sum(dist(i,t)) over all objects t in cluster C */
     /* OPTIMIZATIONS: 1) compute cluster size only once
      *                2) Keep distances between points in a triangular array
      *                because of the symmetricity dist(i,j) == dist(j,i) */
+    int convergence = 1;
     int t, row, col, cluster_size;
     double sum, min;
     double **distances;
+    cout << '\t' << "Updating with PAM: " << endl;
     for (int i = 0; i < this->get_K(); i++) {
-        cout << "PAM for cluster <" << i << "> " << endl;
+        cout << '\t' << "Cluster<" << i << "> " << endl;
         min = DBL_MAX;
         /* size */
         cluster_size = clusters[i]->size();
@@ -50,6 +53,7 @@ void PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, 
             }
         }
         /* new centroid for this cluster */
+        if (centroids->at(i) != t) convergence = 0;
         centroids->at(i) = t;
         /* clear memory */
         for (int j = 0; j < cluster_size; j++) {
@@ -57,7 +61,7 @@ void PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, 
         }
         delete[] distances;
     }
-    return;
+    return convergence;
 }
 
 template <class Point>
@@ -66,8 +70,8 @@ string PAM<Point>::get_name() {
 }
 
 template <class Point>
-void MV_DTW<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, vector<int>* centroids) {
-    return;
+int MV_DTW<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, vector<int>* centroids) {
+    return 0;
 }
 
 template <class Point>
