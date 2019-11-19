@@ -1,6 +1,9 @@
 #include "Assigners.h"
 #include "Library.h"
 #include "Helper_Functions.h"
+#include "LSH.h"
+#include "LSH_Functions.h"
+
 
 using namespace std;
 
@@ -46,8 +49,8 @@ vector<int>** Inverse_assignment<Point>::assign(vector<vector<Point>>* dataset, 
     vector<int>** clusters;
     clusters = new vector<int>*[num_of_centroids];
 
-    vector<vector<Point>>* lsh_dataset;                 //centroids
-    vector<vector<Point>>* lsh_searchset;               //queries
+    vector<vector<Point>> lsh_dataset;                 //centroids
+    vector<vector<Point>> lsh_searchset;               //queries
     for (int i = 0; i < num_of_centroids; i++){
         lsh_dataset.push_back((*dataset)[(*centroids)[i]]);
     }
@@ -72,8 +75,8 @@ vector<int>** Inverse_assignment<Point>::assign(vector<vector<Point>>* dataset, 
     }
 
     /* ---- LSH model ---- */
-    int w = 4*compute_window(&lsh_dataset);
-    LSH <int>* model = new LSH <int> (k, L, w);
+    Point w = 4*compute_window(&lsh_dataset);
+    LSH <Point>* model = new LSH <Point> (this->k, this->L, w);
     model->fit(&lsh_dataset);
     model->evaluate(&lsh_searchset, R, &R_neighbors, &min_distance, &time, &nearest_centroid);
     delete (model);

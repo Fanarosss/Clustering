@@ -17,27 +17,27 @@ Cluster <Point>::Cluster(int* cluster_conf, string Initializer, string Assigner,
     /* Initializer */
     cout << "------Configuration------" << endl;
     if (Initializer == "Random Selection") {
-        this->initializer = new Random_Selection<Point>(K);
+        this->initializer = new Random_Selection<Point>(this->K);
     } else if (Initializer == "K-Means++") {
-        this->initializer = new KMeans_plusplus<Point>(K);
+        this->initializer = new KMeans_plusplus<Point>(this->K);
     } else {
         cerr << "Unknown Initializer";
     }
     cout << '\t' << "Initializer: " << initializer->get_name() << endl;
     /* Assigner */
     if (Assigner == "Lloyd's Assignment") {
-        this->assigner = new Lloyd_assignment<Point>(K);
+        this->assigner = new Lloyd_assignment<Point>(this->K, this->L, this->k);
     } else if (Assigner == "Inverse Assignment") {
-        this->assigner = new Inverse_assignment<Point>(K);
+        this->assigner = new Inverse_assignment<Point>(this->K, this->L, this->k);
     } else {
         cerr << "Unknown Assigner";
     }
     cout << '\t' << "Assigner: " << assigner->get_name() << endl;
     /* Updater */
     if (Updater == "Partitioning Around Medoids (PAM)") {
-        this->updater = new PAM<Point>(K);
+        this->updater = new PAM<Point>(this->K);
     } else if (Updater == "Mean Vector - DTW centroid Curve") {
-        this->updater = new MV_DTW<Point>(K);
+        this->updater = new MV_DTW<Point>(this->K);
     } else {
         cerr << "Unknown Updater";
     }

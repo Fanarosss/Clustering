@@ -234,3 +234,36 @@ double min(double x, double y, double z) {
     double temp = (x < y) ? x : y;
     return (z < temp) ? z : temp;
 }
+
+/* Modulo Operations */
+
+int modulo (int a, int b){
+    int m = a % b;
+    if (m < 0){
+        m = (b < 0) ? m - b : m + b;
+    }
+    return m;
+}
+
+int moduloMultiplication(int a, int b, int mod) {
+    int res = 0;
+    a %= mod;
+    while (b)
+    {
+        // If b is odd, add a with result
+        if (b & 1)
+            res = (res + a) % mod;
+        // Here we assume that doing 2*a
+        // doesn't cause overflow
+        a = (2 * a) % mod;
+        b >>= 1; // b = b / 2
+    }
+    return res;
+}
+
+long moduloPower(long base,long exp,long div) {
+    if (exp == 0)   return 1;
+    if (exp == 1)   return base % div;
+    if (exp % 2 == 0)   return (moduloPower(base, exp / 2, div) * moduloPower(base, exp / 2, div)) % div;
+    return (moduloPower(base, exp - 1, div) * moduloPower(base, 1, div)) % div;
+}

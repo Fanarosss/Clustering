@@ -15,3 +15,6 @@ double dist(vector<double*>* P1, vector<double*>* P2, int=1);
 double min(double, double, double);
 void normalize(vector<double>*);
 double Sum(int, int, vector<double>*, int);
+int modulo (int, int);
+int moduloMultiplication(int, int, int);
+long moduloPower(long, long, long);
