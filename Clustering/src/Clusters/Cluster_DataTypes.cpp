@@ -16,7 +16,7 @@ int Cluster_Vectors(string input_file, string config_file){
     string initializer = "K-Means++";
     string assigner = "Lloyd's Assignment";
     string updater = "Partitioning Around Medoids (PAM)";
-    Cluster <int>* cluster = new Cluster<int>(5, initializer, assigner, updater);
+    Cluster <int>* cluster = new Cluster<int>(cluster_config, initializer, assigner, updater);
     cluster->fit(&cluster_data);
     delete (cluster);
     delete[] cluster_config;
@@ -34,7 +34,7 @@ int Cluster_Curves(string input_file, string config_file){
     string initializer = "K-Means++";
     string assigner = "Lloyd's Assignment";
     string updater = "Partitioning Around Medoids (PAM)";
-    Cluster <double*>* cluster = new Cluster<double*>(5, initializer, assigner, updater);
+    Cluster <double*>* cluster = new Cluster<double*>(cluster_config, initializer, assigner, updater);
     // cluster->fit(&cluster_data);
     delete (cluster);
     delete[] cluster_config;

@@ -4,9 +4,16 @@
 using namespace std;
 
 template <class Point>
-Cluster <Point>::Cluster(int K, string Initializer, string Assigner, string Updater) {
-    /* k for k means */
-    this->K = K;
+Cluster <Point>::Cluster(int* cluster_conf, string Initializer, string Assigner, string Updater) {
+    /* number of clusters*/
+    this->K = cluster_conf[0];
+    /* number of grids*/
+    this->Grids = cluster_conf[1];
+    /* number of vector hash tables*/
+    this->L = cluster_conf[2];
+    /* number of vector hash functions*/
+    this->k = cluster_conf[3];
+
     /* Initializer */
     cout << "------Configuration------" << endl;
     if (Initializer == "Random Selection") {

@@ -11,10 +11,13 @@ private:
     Assigner<Point>* assigner;
     Updater<Point>* updater;
     int K;
+    int Grids;
+    int L;
+    int k;
     vector<int>* centroids;
     vector<int>** clusters;
 public:
-    Cluster(int, string, string, string);
+    Cluster(int*, string, string, string);
     void fit(vector<vector<Point>>*);
     ~Cluster();
 };
