@@ -18,6 +18,11 @@ int Cluster_Vectors(string input_file, string config_file){
     string updater = "Partitioning Around Medoids (PAM)";
     Cluster <int>* cluster = new Cluster<int>(cluster_config, initializer, assigner, updater);
     cluster->fit(&cluster_data);
+    vector<double> Silhouettes = cluster->silhouette(&cluster_data);
+    /* printing Silhouettes */
+    for (int i = 0; i < Silhouettes.size(); i++) {
+        cout << '\t' << "Cluster <" << i << "> : " << Silhouettes[i] << endl;
+    }
     delete (cluster);
     delete[] cluster_config;
     return 0;

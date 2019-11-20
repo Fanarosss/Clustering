@@ -6,7 +6,6 @@ using namespace std;
 
 template <class Point>
 int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, vector<int>* centroids) {
-    /* todo: sometimes segmentation -> maybe at empty clusters */
     /* minimize Sum(dist(i,t)) over all objects t in cluster C */
     /* OPTIMIZATIONS: 1) compute cluster size only once
      *                2) Keep distances between points in a triangular array
@@ -26,8 +25,8 @@ int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, v
         for (int j = 0; j < cluster_size; j++) {
             /* triangular storage to avoid duplicate distances ->
              * distance from 1 to 10 is the same as from 10 to 1 */
-            distances[j] = new double[cluster_size - j];
-            for (int l = 0; l < (cluster_size - j); l++) {
+            distances[j] = new double[cluster_size];
+            for (int l = 0; l < cluster_size; l++) {
                 distances[j][l] = -1;
             }
         }
@@ -36,7 +35,8 @@ int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, v
             /* find medoid t to minimize the distances in this cluster */
             sum = 0.0;
             for (int l = 0; l < cluster_size; l++) {
-                /* find indexes */
+                /* find indexes to minimize computations
+                 * dist from 985 to 4751 is the same as 4751 to 985 */
                 row = (j > l) ? j : l;
                 col = (j < l) ? j : l;
                 /* break point */
@@ -61,6 +61,7 @@ int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, v
         }
         delete[] distances;
     }
+    cout << endl;
     return convergence;
 }
 
