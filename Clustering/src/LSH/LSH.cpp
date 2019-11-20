@@ -1,3 +1,4 @@
+#include "Library.h"
 #include "LSH.h"
 #include "LSH_Functions.h"
 #include "Helper_Functions.h"
@@ -5,7 +6,7 @@
 using namespace std;
 
 template <class Point>
-LSH<Point>::LSH(int k, int L, Point w) {
+LSH<Point>::LSH(int k, int L, double w) {
     this->k = k;
     this->L = L;
     this->w = w;

@@ -22,11 +22,11 @@ private:
     /* parameters LSH */
     int k;
     int L;
-    Point w;
+    double w;
     int d;
     /* end of params */
 public:
-    LSH(int, int, Point);
+    LSH(int, int, double);
     void fit(vector<vector<Point>>*);
     void evaluate(vector<vector<Point>>*, double, vector<vector<int>>*, Point**, double**, int**);
     ~LSH();

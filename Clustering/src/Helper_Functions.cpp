@@ -135,19 +135,30 @@ int Read_files(vector<vector<double*>>* cluster_data, int* cluster_config, strin
 }
 
 /* distance of vectors-curves */
-double dist(vector<int>* P1, vector<int>* P2, int Metric) {
+double dist(vector<int>* P1, vector<int>* P2, int d, int Metric) {
     /* Lk metric
      * for metric = 1 we have L1 metric
      * for metric = 2 we have L2 metric etc.
      * (default value = L1 Metric) -> Manhattan distance */
     double dist = 0;
-    for (int dim = 1; dim < P1->size(); dim++)
+    for (int dim = 1; dim < d; dim++)
+        dist += pow(fabs((*P1)[dim] - (*P2)[dim]),Metric);
+    return pow(dist,1/(double)Metric);
+}
+
+double dist(vector<double>* P1, vector<double>* P2, int d, int Metric) {
+    /* Lk metric
+     * for metric = 1 we have L1 metric
+     * for metric = 2 we have L2 metric etc.
+     * (default value = L1 Metric) -> Manhattan distance */
+    double dist = 0;
+    for (int dim = 1; dim < d; dim++)
         dist += pow(fabs((*P1)[dim] - (*P2)[dim]),Metric);
     return pow(dist,1/(double)Metric);
 }
 
 /* distance of vectors-curves */
-double dist(vector<double*>* P1, vector<double*>* P2, int Metric) {
+double dist(vector<double*>* P1, vector<double*>* P2, int d, int Metric) {
     return DTW(P1, P2);
 }
 
@@ -184,7 +195,7 @@ double min_distance(int index, vector<int>* centroids, vector<vector<Point>>* da
     double distance = 0.0;
     double min_distance = DBL_MAX;
     for (int i = 0; i < centroids->size(); i++) {
-        distance = dist(&dataset->at(centroids->at(i)), &dataset->at(index));
+        distance = dist(&dataset->at(centroids->at(i)), &dataset->at(index), dataset->at(centroids->at(i)).size());
         if (distance < min_distance)
             min_distance = distance;
     }

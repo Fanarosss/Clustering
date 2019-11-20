@@ -43,7 +43,7 @@ int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, v
                 if (j == l) continue;
                 /* sum */
                 if (distances[row][col] == -1)
-                    distances[row][col] = dist(&(*dataset)[(*clusters[i])[j]], &(*dataset)[(*clusters[i])[l]]);
+                    distances[row][col] = dist(&(*dataset)[(*clusters[i])[j]], &(*dataset)[(*clusters[i])[l]], (*dataset)[(*clusters[i])[j]].size());
                 sum += distances[row][col];
             }
             /* find min and the id of min, make it centroid for this cluster */
