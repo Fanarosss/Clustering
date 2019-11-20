@@ -8,6 +8,7 @@ template <class Point>
 class Assigner {
 protected:
     int K;
+    int Grids;
     int L;
     int k;
 public:
@@ -22,7 +23,7 @@ class Lloyd_assignment : public Assigner<Point> {
 private:
     string name = "Lloyd's Assignment";
 public:
-    Lloyd_assignment(int K, int L, int k){this->K = K; this->L = L; this->k = k;}
+    Lloyd_assignment(int K, int Grids, int L, int k){this->K = K; this->Grids = Grids; this->L = L; this->k = k;}
     vector<int>** assign(vector<vector<Point>>*, vector<int>*);
     string get_name();
 };
@@ -32,7 +33,7 @@ class Inverse_assignment : public Assigner<Point> {
 private:
     string name = "Inverse Assignment";
 public:
-    Inverse_assignment(int K, int L, int k){this->K = K; this->L = L; this->k = k;}
+    Inverse_assignment(int K, int Grids, int L, int k){this->K = K; this->Grids = Grids; this->L = L; this->k = k;}
     vector<int>** assign(vector<vector<Point>>*, vector<int>*);
     string get_name();
 };

@@ -5,9 +5,7 @@
 
 using namespace std;
 
-void lsh_datatype(vector<vector<int>>* lsh_dataset, vector<vector<int>>* lsh_searchset, int k, int L, vector<int>* centroids, vector<int>** clusters){
-
-    int data_size = lsh_dataset->size() + lsh_searchset->size();
+void lsh_datatype(vector<vector<int>>* lsh_dataset, vector<vector<int>>* lsh_searchset, int Grids, int k, int L, vector<int>* centroids, vector<int>** clusters){
 
     double R;
     vector<vector<int>> R_neighbors;
@@ -31,17 +29,88 @@ void lsh_datatype(vector<vector<int>>* lsh_dataset, vector<vector<int>>* lsh_sea
     model->evaluate(lsh_searchset, R, &R_neighbors, &min_distance, &time, &nearest_centroid);
     delete (model);
 
-    int centroids_found = 0;
-    for (int i = 0; i < data_size; i++){
+    int counter_for_queries = 0;                            // skip ids of centroids
+    for (int i = 0; i < lsh_searchset->size(); i++){
         if (find(centroids->begin(), centroids->end(), i) != centroids->end()) {
-            centroids_found++;
+            counter_for_queries++;
             continue;
         }
-        clusters[nearest_centroid[i-centroids_found]]->push_back(i);
+        clusters[nearest_centroid[i]]->push_back(counter_for_queries);
+        counter_for_queries++;
     }
 
 }
 
-void lsh_datatype(vector<vector<double*>>* dataset, vector<vector<double*>>* searchset, int k, int L, vector<int>* centroids, vector<int>** clusters){
+void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>* lsh_searchset, int Grids, int k, int L, vector<int>* centroids, vector<int>** clusters){
 
+    double delta = 0.00006;
+    int d = 2;                                                      /* default 2D curves */
+    vector<vector<double>> data_vectored_curves;
+    vector<vector<double>> search_vectored_curves;
+    vector<int*> hashed_neighbors;
+
+    for (int i = 0; i < Grids; i++) {
+
+        /* Vectorization */
+        Grid_Vectorization(delta, d, lsh_dataset, lsh_searchset, &data_vectored_curves, &search_vectored_curves);
+
+        double R;
+        vector<vector<int>> R_neighbors;
+
+        /* Arrays for results */
+        double *min_distance = new double[lsh_searchset->size()];
+        int *nearest_centroid = new int[lsh_searchset->size()];
+        double *time = new double[lsh_searchset->size()];
+
+        /* Initialize arrays */
+        for (int i = 0; i < lsh_searchset->size(); i++) {
+            min_distance[i] = -1;
+            nearest_centroid[i] = -1;
+            time[i] = 0;
+        }
+
+        /* ---- LSH model ---- */
+        double w = 4 * compute_window(&data_vectored_curves);
+        LSH<double> *model = new LSH<double>(k, L, w);
+        model->fit(&data_vectored_curves);
+        model->evaluate(&search_vectored_curves, R, &R_neighbors, &min_distance, &time, &nearest_centroid);
+        delete (model);
+
+        /* Store Results for all Grids */
+        hashed_neighbors.push_back(nearest_centroid);
+
+        /* Clean Vectors */
+        vector<vector<double>>().swap(data_vectored_curves);
+        vector<vector<double>>().swap(search_vectored_curves);
+        vector<vector<int>>().swap(R_neighbors);
+        /* Clean Pointers */
+        delete[] min_distance;
+        delete[] time;
+
+    }
+
+    /* Find Nearest Centroid from results of LSH */
+    int counter_for_queries = 0;                            // skip ids of centroids
+    double distance = 0.0;
+    double min_distance = -1;
+    int nearest_centroid = -1;
+    for (int i = 0; i < lsh_searchset->size(); i++) {
+        if (find(centroids->begin(), centroids->end(), i) != centroids->end()) {
+            counter_for_queries++;
+            continue;
+        }
+        for (int j = 0; j < Grids; j++) {
+            if (hashed_neighbors[j][i] == -1) continue;
+            distance = DTW(&(*lsh_searchset)[i], &(*lsh_dataset)[hashed_neighbors[j][i]]);
+            if (j == 0) {
+                min_distance = distance;
+                nearest_centroid = hashed_neighbors[j][i];
+            } else if (distance < min_distance) {
+                min_distance = distance;
+                nearest_centroid = hashed_neighbors[j][i];
+            }
+        }
+        clusters[i]->push_back(counter_for_queries);
+        counter_for_queries++;
+    }
 }

@@ -61,7 +61,7 @@ vector<int>** Inverse_assignment<Point>::assign(vector<vector<Point>>* dataset, 
     }
 
     /* LSH Call for Vectors or Curves */
-    lsh_datatype(&lsh_dataset, &lsh_searchset, this->k, this->L, centroids, clusters);
+    lsh_datatype(&lsh_dataset, &lsh_searchset, this->Grids, this->k, this->L, centroids, clusters);
 
     return clusters;
 }

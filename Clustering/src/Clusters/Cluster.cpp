@@ -27,9 +27,9 @@ Cluster <Point>::Cluster(int* cluster_conf, string Initializer, string Assigner,
     cout << '\t' << "Initializer: " << initializer->get_name() << endl;
     /* Assigner */
     if (Assigner == "Lloyd's Assignment") {
-        this->assigner = new Lloyd_assignment<Point>(this->K, this->L, this->k);
+        this->assigner = new Lloyd_assignment<Point>(this->K, this->Grids, this->L, this->k);
     } else if (Assigner == "Inverse Assignment") {
-        this->assigner = new Inverse_assignment<Point>(this->K, this->L, this->k);
+        this->assigner = new Inverse_assignment<Point>(this->K, this->Grids, this->L, this->k);
     } else {
         cerr << "Unknown Assigner";
     }
