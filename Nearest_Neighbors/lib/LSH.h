@@ -31,3 +31,5 @@ public:
     void evaluate(vector<vector<Point>>*, double, vector<vector<int>>*, Point**, double**, int**);
     ~LSH();
 };
+
+void Grid_Vectorization(double, int, vector<vector<double*>>*, vector<vector<double*>>*, vector<vector<double>>*, vector<vector<double>>*);

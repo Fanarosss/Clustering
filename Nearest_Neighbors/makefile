@@ -11,9 +11,9 @@ curves_grid_hypercube : HashTable.o Helper_Functions.o Traversals.o BHC_Function
 	@echo "Compile grid curves hypercube ...";
 	g++ -std=c++11 -I ./lib ./build/Grid_Curves_bhc_main.o ./build/BHC.o ./build/BHC_Functions.o ./build/LSH.o ./build/LSH_Functions.o ./build/Helper_Functions.o ./build/Traversals.o ./build/HashTable.o -o ./build/curves_grid_hypercube.x
 
-curves_grid_lsh : HashTable.o Helper_Functions.o Traversals.o LSH_Functions.o LSH.o Grid_Curves_lsh_main.o
+curves_grid_lsh : HashTable.o Helper_Functions.o Traversals.o LSH_Functions.o LSH.o Grid_LSH.o Grid_Curves_lsh_main.o
 	@echo "Compile grid curves lsh ...";
-	g++ -std=c++11 -I ./lib ./build/Grid_Curves_lsh_main.o ./build/LSH.o ./build/LSH_Functions.o ./build/Helper_Functions.o ./build/Traversals.o ./build/HashTable.o -o ./build/curves_grid_lsh.x
+	g++ -std=c++11 -I ./lib ./build/Grid_Curves_lsh_main.o ./build/Grid_LSH.o ./build/LSH.o ./build/LSH_Functions.o ./build/Helper_Functions.o ./build/Traversals.o ./build/HashTable.o -o ./build/curves_grid_lsh.x
 
 Grid_Curves_lsh_main.o :
 	g++ -std=c++11 -I ./lib -c ./src/Grid_Curves/Curves.cpp -D _LSH_ -o ./build/Grid_Curves_lsh_main.o
@@ -43,6 +43,9 @@ lsh : HashTable.o Helper_Functions.o LSH_Functions.o LSH.o LSH_main.o
 
 LSH_main.o :
 	g++ -std=c++11 -I ./lib -c ./src/LSH/LSH_main.cpp -o ./build/LSH_main.o
+
+Grid_LSH.o :
+	g++ -std=c++11 -I ./lib -c ./src/Grid_Curves/Grid_LSH.cpp -o ./build/Grid_LSH.o
 
 LSH.o :
 	g++ -std=c++11 -I ./lib -c ./src/LSH/LSH.cpp -o ./build/LSH.o
