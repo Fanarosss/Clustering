@@ -5,7 +5,7 @@
 using namespace std;
 
 template <class Point>
-int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, vector<int>* centroids) {
+int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, vector<int>* centroids, DistanceDatabase<Point>* db) {
     /* minimize Sum(dist(i,t)) over all objects t in cluster C */
     /* OPTIMIZATIONS: 1) compute cluster size only once
      *                2) Keep distances between points in a triangular array
@@ -43,7 +43,7 @@ int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, v
                 if (j == l) continue;
                 /* sum */
                 if (distances[row][col] == -1)
-                    distances[row][col] = dist(&(*dataset)[(*clusters[i])[j]], &(*dataset)[(*clusters[i])[l]], (*dataset)[(*clusters[i])[j]].size());
+                    distances[row][col] = db->get_distance((*clusters[i])[j], (*clusters[i])[l]);
                 sum += distances[row][col];
             }
             /* find min and the id of min, make it centroid for this cluster */
@@ -71,7 +71,7 @@ string PAM<Point>::get_name() {
 }
 
 template <class Point>
-int MV_DTW<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, vector<int>* centroids) {
+int MV_DTW<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, vector<int>* centroids, DistanceDatabase<Point>* db) {
     return 0;
 }
 

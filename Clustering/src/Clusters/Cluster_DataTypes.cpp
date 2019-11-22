@@ -11,13 +11,15 @@ int Cluster_Vectors(string input_file, string config_file){
     /* Read input.dat and cluster.conf and load them in vectors*/
     int error_code = Read_files(&cluster_data, cluster_config, input_file, config_file);
     if (error_code == -1) return -1;
-
+    cout << "Building Distances Dictionary. It might take a while ..." << endl;
+    DistanceDatabase<int>* db = new DistanceDatabase<int>();
+    db->calculate_distances(&cluster_data);
     cout << "Clustering vectors..." << endl;
     string initializer = "K-Means++";
     string assigner = "Lloyd's Assignment";
     string updater = "Partitioning Around Medoids (PAM)";
     Cluster <int>* cluster = new Cluster<int>(cluster_config, initializer, assigner, updater);
-    cluster->fit(&cluster_data);
+    cluster->fit(&cluster_data, db);
     vector<double> Silhouettes = cluster->silhouette(&cluster_data);
     /* printing Silhouettes */
     for (int i = 0; i < Silhouettes.size(); i++) {
@@ -34,13 +36,15 @@ int Cluster_Curves(string input_file, string config_file){
     /* Read input.dat and cluster.conf and load them in vectors*/
     int error_code = Read_files(&cluster_data, cluster_config, input_file, config_file);
     if (error_code == -1) return -1;
-
+    cout << "Building Distances Dictionary. It might take a while ..." << endl;
+    DistanceDatabase<double*>* db = new DistanceDatabase<double*>();
+    db->calculate_distances(&cluster_data);
     cout << "Clustering vectors..." << endl;
     string initializer = "K-Means++";
     string assigner = "Lloyd's Assignment";
     string updater = "Partitioning Around Medoids (PAM)";
     Cluster <double*>* cluster = new Cluster<double*>(cluster_config, initializer, assigner, updater);
-    // cluster->fit(&cluster_data);
+    cluster->fit(&cluster_data, db);
     delete (cluster);
     delete[] cluster_config;
     return 0;

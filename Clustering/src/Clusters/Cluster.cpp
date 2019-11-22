@@ -46,10 +46,10 @@ Cluster <Point>::Cluster(int* cluster_conf, string Initializer, string Assigner,
 }
 
 template <class Point>
-void Cluster <Point>::fit(vector<vector<Point>>* dataset) {
+void Cluster <Point>::fit(vector<vector<Point>>* dataset, DistanceDatabase<Point>* db) {
     int convergence = 0;
     int count = 0;
-    //for testing = 1
+    //for testing = 5
     int max_comps = 5;
     /* initialization */
     this->centroids = initializer->init(dataset);
@@ -62,7 +62,7 @@ void Cluster <Point>::fit(vector<vector<Point>>* dataset) {
         this->clusters = assigner->assign(dataset, this->centroids);
         /* update */
         cout << '\t' << "Updater call ..." << endl;
-        convergence = updater->update(dataset, this->clusters, this->centroids);
+        convergence = updater->update(dataset, this->clusters, this->centroids, db);
         count++;
         /* check convergence */
         if (convergence == 1) break;
