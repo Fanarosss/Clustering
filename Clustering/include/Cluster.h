@@ -14,13 +14,13 @@ private:
     int Grids;
     int L;
     int k;
-    vector<int>* centroids;
+    vector<vector<Point>*> centroids;
     vector<int>** clusters;
 public:
     Cluster(int*, string, string, string);
     void fit(vector<vector<Point>>*, DistanceDatabase<Point>*);
-    vector<double> silhouette(vector<vector<Point>>*);
-    double average_distance(int, vector<int>*, vector<vector<Point>>*);
-    int find_closest_centroid(int, vector<int>*, vector<vector<Point>>*);
+//    vector<double> silhouette(vector<vector<Point>>*);
+//    double average_distance(int, vector<int>*, vector<vector<Point>>*);
+//    int find_closest_centroid(int, vector<int>*, vector<vector<Point>>*);
     ~Cluster();
 };

@@ -9,9 +9,10 @@
 using namespace std;
 
 template <class Point>
-vector<int>** Lloyd_assignment<Point>::assign(vector<vector<Point>>* dataset, vector<int>* centroids) {
+vector<int>** Lloyd_assignment<Point>::assign(vector<vector<Point>>* dataset, vector<vector<Point>*> centroids) {
     cout << '\t' << "Assigning with Lloyd's Assignment" << endl;
-    int num_of_centroids = centroids->size();
+    int num_of_centroids = centroids.size();
+    cout << "NUMBER OF CENTROIDS : " << num_of_centroids << endl;
     int data_size = dataset->size();
     int dimension = (*dataset)[0].size();
     vector<int>** clusters;
@@ -21,11 +22,11 @@ vector<int>** Lloyd_assignment<Point>::assign(vector<vector<Point>>* dataset, ve
     int centroid;
     double min_dist, curr_dist;
     for (int i = 0; i < data_size; i++) {
-        if (find(centroids->begin(), centroids->end(), i) != centroids->end()) continue;
+        if (find(centroids.begin(), centroids.end(), &(*dataset)[i]) != centroids.end()) continue;
         centroid = -1;
         min_dist = DBL_MAX;
         for (int j = 0; j < num_of_centroids; j++) {
-            curr_dist = dist(&(*dataset)[(*centroids)[j]], &(*dataset)[i], dimension);
+            curr_dist = dist(centroids[j], &(*dataset)[i], dimension);
             if (curr_dist < min_dist) {
                 min_dist = curr_dist;
                 centroid = j;
@@ -42,9 +43,9 @@ string Lloyd_assignment<Point>::get_name() {
 }
 
 template <class Point>
-vector<int>** Inverse_assignment<Point>::assign(vector<vector<Point>>* dataset, vector<int>* centroids) {
+vector<int>** Inverse_assignment<Point>::assign(vector<vector<Point>>* dataset, vector<vector<Point>*> centroids) {
     cout << '\t' << "Assigning with Inverse Assignment" << endl;
-    int num_of_centroids = centroids->size();
+    int num_of_centroids = centroids.size();
     int data_size = dataset->size();
     int dimension = (*dataset)[0].size();
     vector<int>** clusters;
@@ -53,11 +54,11 @@ vector<int>** Inverse_assignment<Point>::assign(vector<vector<Point>>* dataset, 
     vector<vector<Point>> lsh_dataset;                 //centroids
     vector<vector<Point>> lsh_searchset;               //queries
     for (int i = 0; i < num_of_centroids; i++){
-        lsh_dataset.push_back((*dataset)[(*centroids)[i]]);
+        lsh_dataset.push_back((*centroids[i]));
     }
     for (int j = 0; j < data_size; j++){
-        if (find(centroids->begin(), centroids->end(), j) != centroids->end()) continue;
-        lsh_searchset.push_back((*dataset)[(*centroids)[j]]);
+        if (find(centroids.begin(), centroids.end(), &(*dataset)[j]) != centroids.end()) continue;
+        lsh_searchset.push_back((*dataset)[j]);
     }
 
     /* LSH Call for Vectors or Curves */
