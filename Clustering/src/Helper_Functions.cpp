@@ -37,6 +37,7 @@ int Read_files(vector<vector<int>>* cluster_data, int* cluster_config, string in
 
     string line;
     int id;
+    string sid;
     int number;
     vector<int> v;
 
@@ -49,7 +50,7 @@ int Read_files(vector<vector<int>>* cluster_data, int* cluster_config, string in
     while (getline(input_file, line)) {
         stringstream ss(line);
         /* discard id */
-        ss >> number;
+        ss >> sid;
         v.push_back(id);
         while (ss >> number) {
             v.push_back(number);
@@ -176,7 +177,7 @@ double point_dist(double* p, double* q, int Metric){
 void normalize(vector<double>* D) {
     auto it = max_element(D->begin(), D->end());
     double max_D = D->at(distance(D->begin(), it));
-    for (int i = 0; i < D->size(); i++) {
+    for (unsigned int i = 0; i < D->size(); i++) {
         (*D)[i] = (*D)[i] / max_D;
     }
     return;
@@ -194,7 +195,7 @@ template <typename Point>
 double min_distance(int index, vector<int>* centroids, vector<vector<Point>>* dataset) {
     double distance = 0.0;
     double min_distance = DBL_MAX;
-    for (int i = 0; i < centroids->size(); i++) {
+    for (unsigned int i = 0; i < centroids->size(); i++) {
         distance = dist(&dataset->at(centroids->at(i)), &dataset->at(index), dataset->at(centroids->at(i)).size());
         if (distance < min_distance)
             min_distance = distance;

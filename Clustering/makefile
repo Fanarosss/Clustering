@@ -1,4 +1,20 @@
+GOOGLE_TEST_LIB = gtest
+GOOGLE_TEST_INCLUDE = /usr/local/include
+
+G++ = g++
+G++_FLAGS = -c -Wall -I $(GOOGLE_TEST_INCLUDE) -I ./include
+LD_FLAGS = -L /usr/local/lib -l $(GOOGLE_TEST_LIB) -l pthread
+
 all : cluster
+
+tests: gtest_main.o gtest_modulo.o Helper_Functions.o
+	g++ -std=c++11 -o ./build/gtest_modulo.o ./build/Helper_Functions.o ./build/gtest_main.o $(LD_FLAGS) -o ./build/execute_tests.x
+
+gtest_main.o :
+	g++ -std=c++11 $(G++_FLAGS) ./tests/gtest_main.cpp -o ./build/gtest_main.o
+
+gtest_modulo.o :
+	g++ -std=c++11 $(G++_FLAGS) ./tests/gtest_modulo.cpp -o ./build/gtest_modulo.o
 
 cluster : Helper_Functions.o DistanceDatabase.o Initializers.o Assigners.o Updaters.o HashTable.o LSH_DataTypes.o LSH_Functions.o LSH.o Cluster.o Cluster_DataTypes.o main.o
 	@echo "Compile Cluster ...";
@@ -38,7 +54,7 @@ DistanceDatabase.o :
 	g++ -std=c++11 -I ./include -c ./src/Database.cpp -o ./build/DistanceDatabase.o
 
 Helper_Functions.o :
-	g++ -std=c++11 -I ./include -c ./src/Helper_Functions.cpp -o ./build/Helper_Functions.o
+	g++ -std=c++11 $(G++_FLAGS) ./src/Helper_Functions.cpp -o ./build/Helper_Functions.o
 
 clean:
 	-rm -f ./build/*.o
