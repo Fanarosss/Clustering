@@ -54,7 +54,7 @@ DistanceDatabase.o :
 	g++ -std=c++11 -I ./include -c ./src/Database.cpp -o ./build/DistanceDatabase.o
 
 Helper_Functions.o :
-	g++ -std=c++11 $(G++_FLAGS) ./src/Helper_Functions.cpp -o ./build/Helper_Functions.o
+	g++ -std=c++11 -I ./include -c ./src/Helper_Functions.cpp -o ./build/Helper_Functions.o
 
 clean:
 	-rm -f ./build/*.o
