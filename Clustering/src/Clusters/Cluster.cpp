@@ -49,8 +49,8 @@ template <class Point>
 void Cluster <Point>::fit(vector<vector<Point>>* dataset, DistanceDatabase<Point>* db) {
     int convergence = 0;
     int count = 0;
-    //for testing = 5
-    int max_comps = 5;
+    //for testing = 10
+    int max_comps = 10;
     /* initialization */
     this->centroids = initializer->init(dataset);
     /* repeat until no change in clusters */
@@ -71,53 +71,55 @@ void Cluster <Point>::fit(vector<vector<Point>>* dataset, DistanceDatabase<Point
     while(1);
 }
 
-//template <class Point>
-//vector<double> Cluster <Point>::silhouette(vector<vector<Point>>* cluster_data) {
-//    cout << "Silhouette for cluster statistics ..." << endl;
-//    double a, b;
-//    double s = 0;
-//    vector<double> slt;
-//    int closest_centroid_id;
-//    for (int i = 0; i < this->K; i++) {
-//        s = 0;
-//        for (int point : *clusters[i]) {
-//            a = average_distance(point, clusters[i], cluster_data);
-//            closest_centroid_id = find_closest_centroid((*centroids)[i], centroids, cluster_data);
-//            b = average_distance(point, clusters[closest_centroid_id], cluster_data);
-//            s += (b - a)/(double)max(a,b);
-//        }
-//        s /= clusters[i]->size();
-//        slt.push_back(s);
-//    }
-//    return slt;
-//}
-//
-//template <class Point>
-//double Cluster <Point>::average_distance(int point, vector<int>* points, vector<vector<Point>>* cluster_data) {
-//    double avg = 0.0;
-//    for (int id : *points) {
-//        avg += dist(&cluster_data->at(point), &cluster_data->at(id), cluster_data->at(id).size());
-//    }
-//    return avg / (points->size()-1);
-//}
-//
-//template <class Point>
-//int Cluster <Point>::find_closest_centroid(int centroid, vector<int>* centroids, vector<vector<Point>>* cluster_data) {
-//    double distance = 0.0;
-//    double min = DBL_MAX;
-//    int closest_centroid = 0;
-//    int centroid_id = 0;
-//    for (int id : *centroids) {
-//        centroid_id++;
-//        if (id == centroid) continue;
-//        distance = dist(&cluster_data->at(centroid), &cluster_data->at(id), cluster_data->at(id).size());
-//        if (distance < min) {
-//            min = distance;
-//            closest_centroid = centroid_id-1;
-//        }
-//    }
-//    return closest_centroid;
-//}
+template <class Point>
+vector<double> Cluster <Point>::silhouette(vector<vector<Point>>* cluster_data) {
+    cout << "Silhouette for cluster statistics ..." << endl;
+    double a, b;
+    double s = 0;
+    vector<double> slt;
+    int closest_centroid_id;
+    for (int i = 0; i < this->K; i++) {
+        s = 0;
+        for (int point : *clusters[i]) {
+            a = average_distance(point, clusters[i], cluster_data);
+            closest_centroid_id = find_closest_centroid(centroids[i].second, cluster_data);
+            b = average_distance(point, clusters[closest_centroid_id], cluster_data);
+            s += (b - a)/(double)max(a,b);
+        }
+        s /= clusters[i]->size();
+        slt.push_back(s);
+    }
+    return slt;
+}
+
+template <class Point>
+double Cluster <Point>::average_distance(int point, vector<int>* points, vector<vector<Point>>* cluster_data) {
+    double avg = 0.0;
+    for (int id : *points) {
+        avg += dist(&cluster_data->at(point), &cluster_data->at(id), cluster_data->at(id).size());
+    }
+    return avg / (points->size()-1);
+}
+
+template <class Point>
+int Cluster <Point>::find_closest_centroid(int centroid, vector<vector<Point>>* cluster_data) {
+    double distance = 0.0;
+    double min = DBL_MAX;
+    int closest_centroid = 0;
+    int centroid_id = 0;
+    int id;
+    for (auto it : this->centroids) {
+        id = it.second;
+        centroid_id++;
+        if (id == centroid) continue;
+        distance = dist(&cluster_data->at(centroid), &cluster_data->at(id), cluster_data->at(id).size());
+        if (distance < min) {
+            min = distance;
+            closest_centroid = centroid_id-1;
+        }
+    }
+    return closest_centroid;
+}
 
 template <class Point>
 Cluster <Point>::~Cluster(){
