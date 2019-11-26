@@ -41,5 +41,5 @@ double DistanceDatabase<Point>::get_distance(int id1, int id2) {
     return Table[row][col];
 }
 
-template class DistanceDatabase<int>;
+template class DistanceDatabase<double>;
 template class DistanceDatabase<double*>;

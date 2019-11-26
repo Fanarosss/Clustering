@@ -80,7 +80,7 @@ string MV_DTW<Point>::get_name() {
     return this->name;
 }
 
-template class PAM<int>;
+template class PAM<double>;
 template class PAM<double*>;
-template class MV_DTW<int>;
+template class MV_DTW<double>;
 template class MV_DTW<double*>;

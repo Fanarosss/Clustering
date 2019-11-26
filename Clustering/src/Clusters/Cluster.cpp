@@ -126,5 +126,5 @@ Cluster <Point>::~Cluster(){
     delete (this->initializer);
 }
 
-template class Cluster<int>;
+template class Cluster<double>;
 template class Cluster<double*>;

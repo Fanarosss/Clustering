@@ -5,13 +5,13 @@
 
 using namespace std;
 
-void lsh_datatype(vector<vector<int>>* lsh_dataset, vector<vector<int>>* lsh_searchset, int Grids, int k, int L, vector<vector<int>*> centroids, vector<int>** clusters){
+void lsh_datatype(vector<vector<double>>* lsh_dataset, vector<vector<double>>* lsh_searchset, int Grids, int k, int L, vector<int>* centroid_ids, vector<int>** clusters){
 
     double R;
     vector<vector<int>> R_neighbors;
 
     /* Arrays for results */
-    int *min_distance = new int[lsh_searchset->size()];
+    double *min_distance = new double[lsh_searchset->size()];
     int *nearest_centroid = new int[lsh_searchset->size()];
     double *time = new double[lsh_searchset->size()];
 
@@ -21,17 +21,23 @@ void lsh_datatype(vector<vector<int>>* lsh_dataset, vector<vector<int>>* lsh_sea
         nearest_centroid[i] = -1;
         time[i] = 0;
     }
+    cout << "HERE1" << endl;
 
     /* ---- LSH model ---- */
-    int w = 4*compute_window(lsh_dataset);
-    LSH <int>* model = new LSH <int> (k, L, w);
+    double w = 4*compute_window(lsh_dataset);
+    cout << "HERE2,  w = " << w << endl;
+    LSH <double>* model = new LSH <double> (k, L, w);
+    cout << "HERE3" << endl;
     model->fit(lsh_dataset);
+    cout << "HERE4" << endl;
     model->evaluate(lsh_searchset, R, &R_neighbors, &min_distance, &time, &nearest_centroid);
+    cout << "HERE5" << endl;
     delete (model);
 
+    cout << "HERE6" << endl;
     int counter_for_queries = 0;                            // skip ids of centroids
     for (int i = 0; i < lsh_searchset->size(); i++){
-        if (find(centroids.begin(), centroids.end(), &(*lsh_dataset)[i]) != centroids.end()) {
+        if (find(centroid_ids->begin(), centroid_ids->end(), i) != centroid_ids->end()) {
             counter_for_queries++;
             continue;
         }
@@ -41,7 +47,7 @@ void lsh_datatype(vector<vector<int>>* lsh_dataset, vector<vector<int>>* lsh_sea
 
 }
 
-void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>* lsh_searchset, int Grids, int k, int L, vector<vector<double*>*> centroids, vector<int>** clusters){
+void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>* lsh_searchset, int Grids, int k, int L, vector<int>* centroid_ids, vector<int>** clusters){
 
     double delta = 0.00006;
     int d = 2;                                                      /* default 2D curves */
@@ -95,7 +101,7 @@ void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>*
     double min_distance = -1;
     int nearest_centroid = -1;
     for (int i = 0; i < lsh_searchset->size(); i++) {
-        if (find(centroids.begin(), centroids.end(), &(*lsh_dataset)[i]) != centroids.end()) {
+        if (find(centroid_ids->begin(), centroid_ids->end(), i) != centroid_ids->end()) {
             counter_for_queries++;
             continue;
         }

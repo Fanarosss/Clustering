@@ -112,9 +112,9 @@ string KMeans_plusplus<Point>::get_name() {
     return this->name;
 }
 
-template class KMeans_plusplus<int>;
+template class KMeans_plusplus<double>;
 template class KMeans_plusplus<double*>;
-template class Random_Selection<int>;
+template class Random_Selection<double>;
 template class Random_Selection<double*>;
 
 // Driver function to sort the vector elements

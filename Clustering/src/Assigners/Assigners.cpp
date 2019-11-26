@@ -60,18 +60,22 @@ vector<int>** Inverse_assignment<Point>::assign(vector<vector<Point>>* dataset, 
         centroid_ids.push_back(it.second);
     }
 
-    vector<vector<Point>> lsh_dataset;                 //centroids
-    vector<vector<Point>> lsh_searchset;               //queries
+   vector<vector<Point>> lsh_searchset;                 //centroids
+//    vector<vector<Point>> lsh_searchset;               //queries
     for (int i = 0; i < num_of_centroids; i++){
-        lsh_dataset.push_back((*centroids[i].first));
+        lsh_searchset.push_back((*centroids[i].first));
     }
-    for (int j = 0; j < data_size; j++){
-        if (find(centroid_ids.begin(), centroid_ids.end(), j) != centroid_ids.end()) continue;
-        lsh_searchset.push_back((*dataset)[j]);
-    }
+//    for (int j = 0; j < data_size; j++){
+//        if (find(centroid_ids.begin(), centroid_ids.end(), j) != centroid_ids.end()) continue;
+//        lsh_searchset.push_back((*dataset)[j]);
+//    }
+//    cout << "num of centroids " << num_of_centroids << endl;
+//    cout << "data size " << data_size <<  endl;
+//    cout <<  "dataset size " << lsh_dataset.size() <<endl;
+//    cout <<  "searchset size " << lsh_searchset.size() << endl;
 
     /* LSH Call for Vectors or Curves */
-    //lsh_datatype(&lsh_dataset, &lsh_searchset, this->Grids, this->k, this->L, centroids, clusters);
+    lsh_datatype(dataset, &lsh_searchset, this->Grids, this->k, this->L, &centroid_ids, clusters);
 
     return clusters;
 }
@@ -81,7 +85,7 @@ string Inverse_assignment<Point>::get_name() {
     return this->name;
 }
 
-template class Lloyd_assignment<int>;
+template class Lloyd_assignment<double>;
 template class Lloyd_assignment<double*>;
-template class Inverse_assignment<int>;
+template class Inverse_assignment<double>;
 template class Inverse_assignment<double*>;

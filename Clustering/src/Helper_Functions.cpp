@@ -2,7 +2,7 @@
 
 using namespace std;
 
-template double min_distance<int>(int, vector<int>*, vector<vector<int>>*);
+template double min_distance<double>(int, vector<int>*, vector<vector<double>>*);
 template double min_distance<double*>(int, vector<int>*, vector<vector<double*>>*);
 
 void show_cluster_usage(string name)
@@ -33,13 +33,13 @@ int Read_input_file(string input){
     }
 }
 
-int Read_files(vector<vector<int>>* cluster_data, int* cluster_config, string input_file_name, string config_file_name) {
+int Read_files(vector<vector<double>>* cluster_data, int* cluster_config, string input_file_name, string config_file_name) {
 
     string line;
     int id;
     string sid;
-    int number;
-    vector<int> v;
+    double number;
+    vector<double> v;
 
     ifstream input_file(input_file_name);
     ifstream config_file(config_file_name);
