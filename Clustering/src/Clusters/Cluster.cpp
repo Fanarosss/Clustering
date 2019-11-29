@@ -72,7 +72,7 @@ void Cluster <Point>::fit(vector<vector<Point>>* dataset, DistanceDatabase<Point
 }
 
 template <class Point>
-vector<double> Cluster <Point>::silhouette(vector<vector<Point>>* cluster_data) {
+vector<double> Cluster <Point>::silhouette(vector<vector<Point>>* cluster_data, DistanceDatabase<Point>* db) {
     cout << "Silhouette for cluster statistics ..." << endl;
     double a, b;
     double s = 0;
@@ -81,9 +81,9 @@ vector<double> Cluster <Point>::silhouette(vector<vector<Point>>* cluster_data) 
     for (int i = 0; i < this->K; i++) {
         s = 0;
         for (int point : *clusters[i]) {
-            a = average_distance(point, clusters[i], cluster_data);
-            closest_centroid_id = find_closest_centroid(centroids[i].second, cluster_data);
-            b = average_distance(point, clusters[closest_centroid_id], cluster_data);
+            a = average_distance(point, clusters[i], db);
+            closest_centroid_id = find_closest_centroid(centroids[i], db);
+            b = average_distance(point, clusters[closest_centroid_id], db);
             s += (b - a)/(double)max(a,b);
         }
         s /= clusters[i]->size();
@@ -93,32 +93,38 @@ vector<double> Cluster <Point>::silhouette(vector<vector<Point>>* cluster_data) 
 }
 
 template <class Point>
-double Cluster <Point>::average_distance(int point, vector<int>* points, vector<vector<Point>>* cluster_data) {
+double Cluster <Point>::average_distance(int point, vector<int>* points, DistanceDatabase<Point>* db) {
     double avg = 0.0;
     for (int id : *points) {
-        avg += dist(&cluster_data->at(point), &cluster_data->at(id), cluster_data->at(id).size());
+        avg += db->get_distance(point, id);
     }
     return avg / (points->size()-1);
 }
 
 template <class Point>
-int Cluster <Point>::find_closest_centroid(int centroid, vector<vector<Point>>* cluster_data) {
+int Cluster <Point>::find_closest_centroid(pair<vector<Point>*,int> centroid, DistanceDatabase<Point>* db) {
     double distance = 0.0;
     double min = DBL_MAX;
     int closest_centroid = 0;
     int centroid_id = 0;
     int id;
+
     for (auto it : this->centroids) {
         id = it.second;
         centroid_id++;
-        if (id == centroid) continue;
-        distance = dist(&cluster_data->at(centroid), &cluster_data->at(id), cluster_data->at(id).size());
+        if ((it.second != -1) && (centroid.second != -1)) {
+            if (it.second == centroid.second) continue;
+            distance = db->get_distance(centroid.second, id);
+        } else {
+            distance = dist(centroid.first, it.first, (centroid.first)->size());
+        }
         if (distance < min) {
             min = distance;
             closest_centroid = centroid_id-1;
         }
     }
     return closest_centroid;
+
 }
 
 template <class Point>
