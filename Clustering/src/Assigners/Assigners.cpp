@@ -23,11 +23,6 @@ vector<int>** Lloyd_assignment<Point>::assign(vector<vector<Point>>* dataset, ve
     for (auto it : centroids) {
         centroid_ids.push_back(it.second);
     }
-
-    for (int i = 0; i < num_of_centroids; i++){
-        cout << centroids[i].first << " , " << centroids[i].second << endl;
-    }
-
     int centroid;
     double min_dist, curr_dist;
     for (int i = 0; i < data_size; i++) {

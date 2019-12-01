@@ -10,6 +10,7 @@ int Read_files(vector<vector<double>>*, int*, string, string );
 int Read_files(vector<vector<double*>>*, int*, string, string);
 double point_dist(double*, double*, int=2);
 double DTW(vector<double*>*, vector<double*>*);
+void DTW_pairs(vector<double*>*, vector<double*>*, vector<pair<int,int>>*);
 double dist(vector<int>* P1, vector<int>* P2, int, int=1);
 double dist(vector<double>* P1, vector<double>* P2, int, int=1);
 double dist(vector<double*>* P1, vector<double*>* P2, int, int=1);

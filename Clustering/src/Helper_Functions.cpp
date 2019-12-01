@@ -243,6 +243,59 @@ double DTW(vector<double*>* P, vector<double*>* Q) {
     return res;
 }
 
+void DTW_pairs(vector<double*>* P, vector<double*>* Q, vector<pair<int,int>>* pairs) {
+    /* Initialize c(1,1) = ||p1-q1||
+    * * if j > 1, then c(1,j) = c(1,j-1) + ||pi - qj||
+   * if i > 1, then c(i,1) = c(i-1,1) + ||pi - qj||
+   * if i > 1, j > 1, then c(i,j) = min{c(i-1,j), c(i-1,j-1), c(i,j-1)} + ||pi - qj|| */
+    int m1 = P->size() - 1;
+    int m2 = Q->size() - 1;
+
+    /* allocate space */
+    double ** c = new double* [m1];
+    for (int i = 0; i < m1; i++) {
+        c[i] = new double [m2];
+    }
+
+    c[0][0] = point_dist((*P)[1], (*Q)[1], 2);
+    for (int i = 0; i < m1; i++) {
+        for (int j = 0; j < m2; j++) {
+            if (i == 0 && j == 0) continue;
+            if (j > 0 && i == 0) {
+                c[i][j] = c[i][j - 1] + point_dist((*P)[i+1], (*Q)[j+1], 2);
+            } else if (i > 0 && j == 0) {
+                c[i][j] = c[i - 1][j] + point_dist((*P)[i+1], (*Q)[j+1], 2);
+            } else {
+                c[i][j] = min(c[i - 1][j], c[i - 1][j - 1], c[i][j - 1]) + point_dist((*P)[i+1], (*Q)[j+1], 2);
+            }
+        }
+    }
+
+    int i = m1-1;
+    int j = m2-1;
+    while(i>0 && j>0){
+        pairs->insert(pairs->begin(), make_pair(i,j));
+        if((c[i-1][j] <= c[i-1][j-1]) && (c[i-1][j] <= c[i][j-1])){
+            i = i-1;
+        }else if ((c[i][j-1] <= c[i-1][j-1]) && (c[i][j-1] <= c[i-1][j])){
+            j = j-1;
+        }else{
+            i = i-1;
+            j = j-1;
+        }
+    }
+    while(i>0){
+        pairs->insert(pairs->begin(), make_pair(i,j));
+        i--;
+    }
+    while(j>0){
+        pairs->insert(pairs->begin(), make_pair(i,j));
+        j--;
+    }
+    pairs->insert(pairs->begin(), make_pair(0,0));
+
+}
+
 double min(double x, double y, double z) {
     /* get the min out of 3 real numbers */
     double temp = (x < y) ? x : y;
@@ -319,6 +372,7 @@ int mv_dtw_datatype(vector<vector<double*>>* dataset, vector<int>** clusters, ve
     int num_of_centroids = centroids->size();
     double sum, mean;
     int lamda[num_of_centroids];
+    vector<vector<double*>> C;
     for (int i = 0; i < num_of_centroids; i++) {
         cluster_size = clusters[i]->size();
         sum = 0;
@@ -329,8 +383,45 @@ int mv_dtw_datatype(vector<vector<double*>>* dataset, vector<int>** clusters, ve
         mean = sum / cluster_size;
         lamda[i] = mean;
         cout << lamda[i] << endl;
+        for (int k = 0; k < cluster_size; k++) {
+            if((*dataset)[(*clusters[i])[k]][0][1] == lamda[i]){
+                C->push_back((*dataset)[(*clusters[i])[k]]);
+                break;
+            }
+        }
+        cout << C[i] << endl;
     }
-
-
-    return 0;
+    for (int i = 0; i < num_of_centroids; i++) {
+        cluster_size = clusters[i]->size();
+        vector<double*> C2 = C[i];
+        vector<double*> A[lamda[i]];
+        for(int j = 0; j < A.size(); j++){
+            A[j] = {};
+        }
+        for (int k = 0; k < cluster_size; k++) {
+            vector<pair<int,int>>* pairs;
+            DTW_pairs(&C[i], &(*dataset)[(*clusters[i])[k]], pairs);
+            for (auto iter : pairs) {
+                A[pairs.first]->push_back((*dataset)[(*clusters[i])[k]][pairs.second+1]);
+            }
+        }
+        double sumx = 0, meanx = 0;
+        double sumy = 0, meany = 0;
+        for (int l = 0; l < lamda[i]; l++){
+            for(int m = 0; m < A[l].size(); m++){
+                sumx += A[l][m][0];
+                sumy += A[l][m][1];
+            }
+            meanx = sumx / A[l].size();
+            meany = sumy / A[l].size();
+            double[2] point;
+            point[0] = meanx;
+            point[1] = meany;
+            C[i][l] = point;
+        }
+        if (DTW((*centroids)[i].first, &C[i]) > 1000) convergence++;
+        (*centroids)[i].first = C[i];
+        (*centroids)[i].second = -1;
+    }
+    return (convergence != 0) ? 0 : 1;
 }

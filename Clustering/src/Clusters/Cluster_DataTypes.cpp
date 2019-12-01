@@ -42,7 +42,7 @@ int Cluster_Curves(string input_file, string config_file){
     cout << "Clustering vectors..." << endl;
     string initializer = "K-Means++";
     string assigner = "Lloyd's Assignment";
-    string updater = "Partitioning Around Medoids (PAM)";
+    string updater = "Mean Vector - DTW centroid Curve";
     Cluster <double*>* cluster = new Cluster<double*>(cluster_config, initializer, assigner, updater);
     cluster->fit(&cluster_data, db);
     vector<double> Silhouettes = cluster->silhouette(&cluster_data, db);
