@@ -118,6 +118,10 @@ int Cluster <Point>::find_closest_centroid(pair<vector<Point>*,int> centroid, Di
         } else {
             distance = dist(centroid.first, it.first, (centroid.first)->size());
         }
+
+        /* for duplicate points in dataset - centroids*/
+        if (distance == 0) continue;
+
         if (distance < min) {
             min = distance;
             closest_centroid = centroid_id-1;
