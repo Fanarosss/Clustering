@@ -10,7 +10,7 @@ using namespace std;
 template void compute_unassigned<double>(vector<vector<double>>* ,vector<vector<double>>* , int, double**, int**);
 template void compute_unassigned<double*>(vector<vector<double*>>* ,vector<vector<double*>>* , int, double**, int**);
 
-void lsh_datatype(vector<vector<double>>* lsh_dataset, vector<vector<double>>* lsh_searchset, int Grids, int k, int L, vector<int>* centroid_ids, vector<int>** clusters){
+void lsh_datatype(vector<vector<double>>* lsh_dataset, vector<vector<double>>* lsh_searchset, int Grids, int k, int L, vector<int>** clusters){
 
     int data_size = lsh_dataset->size();
     /* Arrays for results */
@@ -51,7 +51,7 @@ void lsh_datatype(vector<vector<double>>* lsh_dataset, vector<vector<double>>* l
 
 }
 
-void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>* lsh_searchset, int Grids, int k, int L, vector<int>* centroid_ids, vector<int>** clusters){
+void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>* lsh_searchset, int Grids, int k, int L, vector<int>** clusters){
 
     double delta = 0.00006;
     int d = 2;                                                      /* default 2D curves */

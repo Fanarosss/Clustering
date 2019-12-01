@@ -11,7 +11,7 @@ protected:
     int K;
 public:
     Updater(){}
-    virtual int update(vector<vector<Point>>*, vector<int>**, vector<pair<vector<Point>*, int>>, DistanceDatabase<Point>*) {return 0;}
+    virtual int update(vector<vector<Point>>*, vector<int>**, vector<pair<vector<Point>*, int>>*S, DistanceDatabase<Point>*) {return 0;}
     virtual string get_name() {}
     virtual int get_K() {return K;}
 };

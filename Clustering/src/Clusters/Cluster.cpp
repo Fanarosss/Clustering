@@ -62,7 +62,7 @@ void Cluster <Point>::fit(vector<vector<Point>>* dataset, DistanceDatabase<Point
         this->clusters = assigner->assign(dataset, this->centroids);
         /* update */
         cout << '\t' << "Updater call ..." << endl;
-        convergence = updater->update(dataset, this->clusters, this->centroids, db);
+        convergence = updater->update(dataset, this->clusters, &this->centroids, db);
         count++;
         /* check convergence */
         if (convergence == 1) break;

@@ -16,7 +16,7 @@ int Cluster_Vectors(string input_file, string config_file){
     db->calculate_distances(&cluster_data);
     cout << "Clustering vectors..." << endl;
     string initializer = "K-Means++";
-    string assigner = "Lloyd's Assignment";
+    string assigner = "Inverse Assignment";
     string updater = "Mean Vector - DTW centroid Curve";
     Cluster <double>* cluster = new Cluster<double>(cluster_config, initializer, assigner, updater);
     cluster->fit(&cluster_data, db);

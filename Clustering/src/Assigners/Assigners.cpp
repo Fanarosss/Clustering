@@ -61,11 +61,6 @@ vector<int>** Inverse_assignment<Point>::assign(vector<vector<Point>>* dataset, 
     clusters = new vector<int>*[num_of_centroids];
     for(int i = 0 ; i < num_of_centroids ; i++ )
         clusters[i] = new vector<int>;
-    /* vector containing only the centroid id */
-    vector<int> centroid_ids;
-    for (auto it : centroids) {
-        centroid_ids.push_back(it.second);
-    }
 
     vector<vector<Point>> lsh_searchset;                 //centroids
     for (int i = 0; i < num_of_centroids; i++){
@@ -73,7 +68,7 @@ vector<int>** Inverse_assignment<Point>::assign(vector<vector<Point>>* dataset, 
     }
 
     /* LSH Call for Vectors or Curves */
-    lsh_datatype(dataset, &lsh_searchset, this->Grids, this->k, this->L, &centroid_ids, clusters);
+    lsh_datatype(dataset, &lsh_searchset, this->Grids, this->k, this->L, clusters);
 
     return clusters;
 }

@@ -9,7 +9,7 @@ int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, v
     /* minimize Sum(dist(i,t)) over all objects t in cluster C */
     /* OPTIMIZATIONS: 1) compute cluster size only once
      *                2) Keep distances between points in a triangular array
-     *                because of the symmetricity dist(i,j) == dist(j,i) */
+     *                because of the symmetry dist(i,j) == dist(j,i) */
     int convergence = 0;
     int t, row, col, cluster_size;
     double sum, min;
@@ -54,7 +54,6 @@ int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, v
         }
         /* new centroid for this cluster */
         if ((*centroids)[i].second != t) convergence++;
-        cout << "Centroid : " << &(*dataset)[t] << " , ID : " << t <<  endl;
         (*centroids)[i].first = &(*dataset)[t];
         (*centroids)[i].second = t;
         /* clear memory */
@@ -78,7 +77,6 @@ int MV_DTW<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters
     cout << '\t' << "Updating with MV_DTW: " << endl;
 
     int convergence = mv_dtw_datatype(dataset, clusters, centroids);
-    cout << convergence << endl;
     return convergence;
 }
 

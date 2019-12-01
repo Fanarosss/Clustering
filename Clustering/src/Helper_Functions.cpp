@@ -306,7 +306,6 @@ int mv_dtw_datatype(vector<vector<double>>* dataset, vector<int>** clusters, vec
             new_centroid->push_back(mean);
         }
         if (dist((*centroids)[i].first, new_centroid, dimension) > e) convergence++;
-        cout << dist((*centroids)[i].first, new_centroid, dimension) << endl;
         (*centroids)[i].first = new_centroid;
         (*centroids)[i].second = -1;
     }
