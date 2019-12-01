@@ -5,12 +5,12 @@
 using namespace std;
 
 template <class Point>
-int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, vector<pair<vector<Point>*, int>> centroids, DistanceDatabase<Point>* db) {
+int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, vector<pair<vector<Point>*, int>>* centroids, DistanceDatabase<Point>* db) {
     /* minimize Sum(dist(i,t)) over all objects t in cluster C */
     /* OPTIMIZATIONS: 1) compute cluster size only once
      *                2) Keep distances between points in a triangular array
      *                because of the symmetricity dist(i,j) == dist(j,i) */
-    int convergence = 1;
+    int convergence = 0;
     int t, row, col, cluster_size;
     double sum, min;
     double **distances;
@@ -53,8 +53,10 @@ int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, v
             }
         }
         /* new centroid for this cluster */
-        if (centroids[i].second != t) convergence = 0;
-        centroids[i].second = t;
+        if ((*centroids)[i].second != t) convergence++;
+        cout << "Centroid : " << &(*dataset)[t] << " , ID : " << t <<  endl;
+        (*centroids)[i].first = &(*dataset)[t];
+        (*centroids)[i].second = t;
         /* clear memory */
         for (int j = 0; j < cluster_size; j++) {
             delete[] distances[j];
@@ -62,7 +64,7 @@ int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, v
         delete[] distances;
     }
     cout << endl;
-    return convergence;
+    return (convergence != 0) ? 0 : 1;
 }
 
 template <class Point>
@@ -71,14 +73,20 @@ string PAM<Point>::get_name() {
 }
 
 template <class Point>
-int MV_DTW<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, vector<pair<vector<Point>*, int>> centroids, DistanceDatabase<Point>* db) {
-    return 0;
+int MV_DTW<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, vector<pair<vector<Point>*, int>>* centroids, DistanceDatabase<Point>* db) {
+
+    cout << '\t' << "Updating with MV_DTW: " << endl;
+
+    int convergence = mv_dtw_datatype(dataset, clusters, centroids);
+    cout << convergence << endl;
+    return convergence;
 }
 
 template <class Point>
 string MV_DTW<Point>::get_name() {
     return this->name;
 }
+
 
 template class PAM<double>;
 template class PAM<double*>;

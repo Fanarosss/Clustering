@@ -176,6 +176,85 @@ void LSH<Point>::evaluate(vector<vector<Point>>* searchset, double R, vector<vec
     vector<vector<vector<vector<Point>>>>().swap(ANN);
 }
 
+
+template <class Point>
+void LSH<Point>::evaluate_clusters(vector<vector<Point>>* searchset, Point** min_distance, int** nearest_centroid, int* unassigned_vectors) {
+    /* ------------------------ QUERY SEARCH ----------------------------*/
+
+    /* Vector containing H of size (k, d_size) */
+    vector <vector<int>> hash_functions;
+    /* Vector containing projections of data */
+    vector <vector<int>> a_projects;
+    /* Internal vector H for pushing */
+    vector<int> H;
+    /* Amplified hash for searchset */
+    vector <vector<int>> query_amplified_g;
+    /* Temporary g vector for push back */
+    vector<int> temp_g;
+    /* ANN results */
+    vector<vector<vector<vector<Point>>>> ANN;
+    /* ANN for each L iteration */
+    vector<vector<vector<Point>>> ANNi;
+
+    /* Loop for creation of L hash tables */
+    for (int l = 0; l < L; l++) {
+        /* Loop for creation of K hi to create amplified g*/
+        for (int i = 0; i < k; i++) {
+            /* Projections Computation */
+            projections(&a_projects, searchset, &(s[l][i]), w, d);
+            /* Hash Computation */
+            compute_hash(&H, &a_projects, &power, d, k, w);
+            hash_functions.push_back(H);
+
+            vector<int>().swap(H);
+            vector<vector<int>>().swap(a_projects);
+        }
+
+        /* Amplified hash computation */
+        amplify_hash(&temp_g, &hash_functions, k);
+        query_amplified_g.push_back(temp_g);
+
+        vector<vector<int>>().swap(hash_functions);
+        vector<int>().swap(temp_g);
+
+        /* ANN Calculation */
+        for (int i = 0; i < searchset->size(); i++) {
+            ANNi.push_back(*MyHashTable[l]->Search_Neighbors(query_amplified_g[l][i]));
+        }
+        ANN.push_back(ANNi);
+
+        /* clear hash functions and s for next iteration */
+        vector<vector<vector<Point>>>().swap(ANNi);
+    }
+
+    double distance;
+    /* default metric L1 Manhattan */
+    int Metric = 1;
+    /* For every centroid in searchset */
+    for (int q = 0; q < searchset->size(); q++) {
+        /* For every hash table L */
+        for (int i = 0; i < ANN.size(); i++) {
+            /* For every vector in the same bucket  */
+            for (int j = 0; j < ANN[i][q].size(); j++) {
+                /* Check points that have the same amplified g */
+                if (query_amplified_g[i][q] == data_amplified_g[i][(int)ANN[i][q][j][0]]) {
+                    distance = dist(&ANN[i][q][j], &searchset->at(q), dataset->at(0).size(), Metric);
+                    /* Find Nearest Centroid */
+                    if((*nearest_centroid)[(int)ANN[i][q][j][0]] == -1){
+                        (*unassigned_vectors)--;
+                    }
+                    if (((distance < (*min_distance)[(int)ANN[i][q][j][0]]) || (*nearest_centroid)[(int)ANN[i][q][j][0]] == -1)) {
+                        (*min_distance)[(int)ANN[i][q][j][0]] = distance;
+                        (*nearest_centroid)[(int)ANN[i][q][j][0]] = q;
+                    }
+                }
+            }
+        }
+    }
+    /* clean memory */
+    vector<vector<vector<vector<Point>>>>().swap(ANN);
+}
+
 template <class Point>
 LSH<Point>::~LSH() {
     /* clean memory */

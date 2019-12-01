@@ -1,5 +1,7 @@
 #include "Helper_Functions.h"
 
+#define e 10
+
 using namespace std;
 
 template double min_distance<double>(int, vector<int>*, vector<vector<double>>*);
@@ -153,7 +155,7 @@ double dist(vector<double>* P1, vector<double>* P2, int d, int Metric) {
      * for metric = 2 we have L2 metric etc.
      * (default value = L1 Metric) -> Manhattan distance */
     double dist = 0;
-    for (int dim = 1; dim < d; dim++)
+    for (int dim = 1; dim <= d; dim++)
         dist += pow(fabs((*P1)[dim] - (*P2)[dim]),Metric);
     return pow(dist,1/(double)Metric);
 }
@@ -278,4 +280,58 @@ long moduloPower(long base,long exp,long div) {
     if (exp == 1)   return base % div;
     if (exp % 2 == 0)   return (moduloPower(base, exp / 2, div) * moduloPower(base, exp / 2, div)) % div;
     return (moduloPower(base, exp - 1, div) * moduloPower(base, 1, div)) % div;
+}
+
+/* Update Operations */
+
+int mv_dtw_datatype(vector<vector<double>>* dataset, vector<int>** clusters, vector<pair<vector<double>*, int>>* centroids){
+
+    int convergence = 0;
+    int cluster_size;
+    int num_of_centroids = centroids->size();
+    double sum, mean;
+    int dimension = (*dataset)[0].size() - 1;
+    for (int i = 0; i < num_of_centroids; i++) {
+        vector<double>* new_centroid = new vector<double>;
+        cout << '\t' << "Cluster<" << i << "> " << endl;
+        /* size */
+        cluster_size = clusters[i]->size();
+        for (int j = 0; j < dimension; j++) {
+            sum = 0;
+            mean = 0;
+            for (int k = 0; k < cluster_size; k++) {
+                sum += (*dataset)[(*clusters[i])[k]][j];
+            }
+            mean = sum / cluster_size;
+            new_centroid->push_back(mean);
+        }
+        if (dist((*centroids)[i].first, new_centroid, dimension) > e) convergence++;
+        cout << dist((*centroids)[i].first, new_centroid, dimension) << endl;
+        (*centroids)[i].first = new_centroid;
+        (*centroids)[i].second = -1;
+    }
+    return (convergence != 0) ? 0 : 1;
+}
+
+int mv_dtw_datatype(vector<vector<double*>>* dataset, vector<int>** clusters, vector<pair<vector<double*>*, int>>* centroids){
+
+    int convergence = 0;
+    int cluster_size;
+    int num_of_centroids = centroids->size();
+    double sum, mean;
+    int lamda[num_of_centroids];
+    for (int i = 0; i < num_of_centroids; i++) {
+        cluster_size = clusters[i]->size();
+        sum = 0;
+        mean = 0;
+        for (int k = 0; k < cluster_size; k++) {
+            sum += (*dataset)[(*clusters[i])[k]][0][1];
+        }
+        mean = sum / cluster_size;
+        lamda[i] = mean;
+        cout << lamda[i] << endl;
+    }
+
+
+    return 0;
 }

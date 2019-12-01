@@ -19,3 +19,6 @@ double Sum(int, int, vector<double>*, int);
 int modulo (int, int);
 int moduloMultiplication(int, int, int);
 long moduloPower(long, long, long);
+
+int mv_dtw_datatype(vector<vector<double>>*, vector<int>**, vector<pair<vector<double>*, int>>*);
+int mv_dtw_datatype(vector<vector<double*>>*, vector<int>**, vector<pair<vector<double*>*, int>>*);

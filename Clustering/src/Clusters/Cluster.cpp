@@ -42,7 +42,7 @@ Cluster <Point>::Cluster(int* cluster_conf, string Initializer, string Assigner,
     } else {
         cerr << "Unknown Updater";
     }
-    cout << '\t' << "Update: " << updater->get_name() << endl << "-----------------------" << endl;
+    cout << '\t' << "Updater: " << updater->get_name() << endl << "-----------------------" << endl;
 }
 
 template <class Point>
