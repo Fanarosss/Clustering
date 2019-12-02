@@ -59,6 +59,11 @@ void Cluster <Point>::fit(vector<vector<Point>>* dataset, DistanceDatabase<Point
         cout << "Iteration <" << count << ">: " << endl;
         /* assignment */
         cout << '\t' << "Assigner call ..." << endl;
+        if (count > 0) {
+            for (int i = 0; i < this->K; i++)
+                delete (this->clusters[i]);
+            delete[] this->clusters;
+        }
         this->clusters = assigner->assign(dataset, this->centroids);
         /* update */
         cout << '\t' << "Updater call ..." << endl;
@@ -134,6 +139,12 @@ int Cluster <Point>::find_closest_centroid(pair<vector<Point>*,int> centroid, Di
 template <class Point>
 Cluster <Point>::~Cluster(){
     delete (this->initializer);
+    delete (this->assigner);
+    delete (this->updater);
+
+    for (int i = 0; i < this->K; i++)
+        delete (this->clusters[i]);
+    delete[] this->clusters;
 }
 
 template class Cluster<double>;

@@ -9,13 +9,21 @@
 using namespace std;
 
 template <class Point>
+Lloyd_assignment<Point>::Lloyd_assignment(int K, int Grids, int L, int k){
+    this->name = "Lloyd's Assignment";
+    this->K = K;
+    this->Grids = Grids;
+    this->L = L;
+    this->k = k;
+}
+
+template <class Point>
 vector<int>** Lloyd_assignment<Point>::assign(vector<vector<Point>>* dataset, vector<pair<vector<Point>*, int>> centroids) {
     cout << '\t' << "Assigning with Lloyd's Assignment" << endl;
     int num_of_centroids = centroids.size();
     int data_size = dataset->size();
     int dimension = (*dataset)[0].size() - 1;
-    vector<int>** clusters;
-    clusters = new vector<int>*[num_of_centroids];
+    vector<int>** clusters = new vector<int>*[num_of_centroids];
     for(int i = 0 ; i < num_of_centroids ; i++ )
     clusters[i] = new vector<int>;
     /* vector containing only the centroid id */
@@ -44,6 +52,15 @@ vector<int>** Lloyd_assignment<Point>::assign(vector<vector<Point>>* dataset, ve
 template <class Point>
 string Lloyd_assignment<Point>::get_name() {
     return this->name;
+}
+
+template <class Point>
+Inverse_assignment<Point>::Inverse_assignment(int K, int Grids, int L, int k){
+    this->name = "Inverse Assignment";
+    this->K = K;
+    this->Grids = Grids;
+    this->L = L;
+    this->k = k;
 }
 
 template <class Point>

@@ -21,19 +21,21 @@ public:
 template <class Point>
 class Lloyd_assignment : public Assigner<Point> {
 private:
-    string name = "Lloyd's Assignment";
+    string name;
 public:
-    Lloyd_assignment(int K, int Grids, int L, int k){this->K = K; this->Grids = Grids; this->L = L; this->k = k;}
+    Lloyd_assignment(int, int, int, int);
     vector<int>** assign(vector<vector<Point>>*, vector<pair<vector<Point>*, int>>);
     string get_name();
+    ~Lloyd_assignment();
 };
 
 template <class Point>
 class Inverse_assignment : public Assigner<Point> {
 private:
-    string name = "Inverse Assignment";
+    string name;
 public:
-    Inverse_assignment(int K, int Grids, int L, int k){this->K = K; this->Grids = Grids; this->L = L; this->k = k;}
+    Inverse_assignment(int, int, int, int);
     vector<int>** assign(vector<vector<Point>>*, vector<pair<vector<Point>*, int>>);
     string get_name();
+    ~Inverse_assignment();
 };

@@ -11,7 +11,7 @@ protected:
     int K;
 public:
     Updater(){}
-    virtual int update(vector<vector<Point>>*, vector<int>**, vector<pair<vector<Point>*, int>>*S, DistanceDatabase<Point>*) {return 0;}
+    virtual int update(vector<vector<Point>>*, vector<int>**, vector<pair<vector<Point>*, int>>*, DistanceDatabase<Point>*) {return 0;}
     virtual string get_name() {}
     virtual int get_K() {return K;}
 };
@@ -19,19 +19,21 @@ public:
 template <class Point>
 class PAM : public Updater<Point> {
 private:
-    string name = "Partitioning Around Medoids (PAM)";
+    string name;
 public:
-    PAM(int K){this->K = K;}
+    PAM(int);
     int update(vector<vector<Point>>*, vector<int>**, vector<pair<vector<Point>*, int>>*, DistanceDatabase<Point>*);
     string get_name();
+    ~PAM();
 };
 
 template <class Point>
 class MV_DTW : public Updater<Point> {
 private:
-    string name = "Mean Vector - DTW centroid Curve";
+    string name;
 public:
-    MV_DTW(int K){this->K = K;}
+    MV_DTW(int);
     int update(vector<vector<Point>>*, vector<int>**, vector<pair<vector<Point>*, int>>*, DistanceDatabase<Point>*);
     string get_name();
+    ~MV_DTW();
 };

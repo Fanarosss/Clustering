@@ -16,8 +16,8 @@ int Cluster_Vectors(string input_file, string config_file){
     db->calculate_distances(&cluster_data);
     cout << "Clustering vectors..." << endl;
     string initializer = "K-Means++";
-    string assigner = "Inverse Assignment";
-    string updater = "Mean Vector - DTW centroid Curve";
+    string assigner = "Lloyd's Assignment";
+    string updater = "Partitioning Around Medoids (PAM)";
     Cluster <double>* cluster = new Cluster<double>(cluster_config, initializer, assigner, updater);
     cluster->fit(&cluster_data, db);
     vector<double> Silhouettes = cluster->silhouette(&cluster_data, db);
@@ -27,6 +27,7 @@ int Cluster_Vectors(string input_file, string config_file){
     }
     delete (cluster);
     delete[] cluster_config;
+    delete (db);
     return 0;
 }
 
@@ -42,7 +43,7 @@ int Cluster_Curves(string input_file, string config_file){
     cout << "Clustering vectors..." << endl;
     string initializer = "K-Means++";
     string assigner = "Lloyd's Assignment";
-    string updater = "Mean Vector - DTW centroid Curve";
+    string updater = "Partitioning Around Medoids (PAM)";
     Cluster <double*>* cluster = new Cluster<double*>(cluster_config, initializer, assigner, updater);
     cluster->fit(&cluster_data, db);
     vector<double> Silhouettes = cluster->silhouette(&cluster_data, db);
@@ -52,5 +53,11 @@ int Cluster_Curves(string input_file, string config_file){
     }
     delete (cluster);
     delete[] cluster_config;
+    delete (db);
+    for (auto curve : cluster_data){
+        for (auto point : curve){
+            delete[] point;
+        }
+    }
     return 0;
 }
