@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <algorithm> // for copy() and assign()
+#include <iterator> // for back_inserter
 #include <cstdlib>
 #include <string>
 #include <array>

@@ -372,7 +372,8 @@ int mv_dtw_datatype(vector<vector<double*>>* dataset, vector<int>** clusters, ve
     int num_of_centroids = centroids->size();
     double sum, mean;
     int lamda[num_of_centroids];
-    vector<vector<double*>> C;
+    double* point;
+    vector<vector<double*>*> Initial_C;
     for (int i = 0; i < num_of_centroids; i++) {
         cluster_size = clusters[i]->size();
         sum = 0;
@@ -382,46 +383,61 @@ int mv_dtw_datatype(vector<vector<double*>>* dataset, vector<int>** clusters, ve
         }
         mean = sum / cluster_size;
         lamda[i] = mean;
-        cout << lamda[i] << endl;
         for (int k = 0; k < cluster_size; k++) {
-            if((*dataset)[(*clusters[i])[k]][0][1] == lamda[i]){
-                C->push_back((*dataset)[(*clusters[i])[k]]);
+            vector<double*>* curr_c = new vector<double*>;
+            if((*dataset)[(*clusters[i])[k]][0][1] >= lamda[i]){
+                point = new double [2];
+                point[0] = -1;
+                point[1] = lamda[i]+1;
+                curr_c->push_back(point);
+                for ( int l = 1; l <= lamda[i]; l++){
+                    curr_c->push_back((*dataset)[(*clusters[i])[k]][l]);                ///check
+                }
+                Initial_C.push_back(curr_c);
                 break;
             }
         }
-        cout << C[i] << endl;
     }
     for (int i = 0; i < num_of_centroids; i++) {
+        vector<double*>* C = new vector<double*>;
         cluster_size = clusters[i]->size();
-        vector<double*> C2 = C[i];
         vector<double*> A[lamda[i]];
-        for(int j = 0; j < A.size(); j++){
-            A[j] = {};
-        }
+//        for(int j = 0; j < lamda[i]; j++){
+//            A[j] = {};
+//        }
         for (int k = 0; k < cluster_size; k++) {
-            vector<pair<int,int>>* pairs;
-            DTW_pairs(&C[i], &(*dataset)[(*clusters[i])[k]], pairs);
+            vector<pair<int,int>> pairs;
+            DTW_pairs(Initial_C[i], &(*dataset)[(*clusters[i])[k]], &pairs);
             for (auto iter : pairs) {
-                A[pairs.first]->push_back((*dataset)[(*clusters[i])[k]][pairs.second+1]);
+                A[iter.first].push_back((*dataset)[(*clusters[i])[k]][iter.second + 1]);
             }
         }
         double sumx = 0, meanx = 0;
         double sumy = 0, meany = 0;
+
+        point = new double [2];
+        point[0] = -1;
+        point[1] = lamda[i]+1;
+        C->push_back(point);
         for (int l = 0; l < lamda[i]; l++){
-            for(int m = 0; m < A[l].size(); m++){
+            for(unsigned int m = 0; m < A[l].size(); m++){
                 sumx += A[l][m][0];
                 sumy += A[l][m][1];
             }
             meanx = sumx / A[l].size();
             meany = sumy / A[l].size();
-            double[2] point;
+            point = new double [2];
             point[0] = meanx;
             point[1] = meany;
-            C[i][l] = point;
+            C->push_back(point);
         }
-        if (DTW((*centroids)[i].first, &C[i]) > 1000) convergence++;
-        (*centroids)[i].first = C[i];
+        if (DTW((*centroids)[i].first, C) > e) convergence++;
+        (*centroids)[i].first = C;
         (*centroids)[i].second = -1;
     }
+    for( int i = 0; i < num_of_centroids; i++){
+        cout << "Centroid : " << (*centroids)[i].first << " , ID: " << (*centroids)[i].second << " , Lamda : " << lamda[i] << " , Cluster Size : " << clusters[i]->size() << endl;
+    }
+    cout << endl;
     return (convergence != 0) ? 0 : 1;
 }
