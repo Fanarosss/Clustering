@@ -77,6 +77,7 @@ int MV_DTW<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters
     cout << '\t' << "Updating with MV_DTW: " << endl;
 
     int convergence = mv_dtw_datatype(dataset, clusters, centroids);
+//    cout << "Convergence : " << convergence << endl;
     return convergence;
 }
 

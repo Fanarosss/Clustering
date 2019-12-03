@@ -13,7 +13,7 @@ protected:
     int k;
 public:
     Assigner(){}
-    virtual vector<int>** assign(vector<vector<Point>>*, vector<pair<vector<Point>*, int>>) {return NULL;}
+    virtual vector<int>** assign(vector<vector<Point>>*, vector<pair<vector<Point>*, int>>*) {return NULL;}
     virtual string get_name() {}
     virtual int get_K() {return K;}
 };
@@ -24,7 +24,7 @@ private:
     string name = "Lloyd's Assignment";
 public:
     Lloyd_assignment(int K, int Grids, int L, int k){this->K = K; this->Grids = Grids; this->L = L; this->k = k;}
-    vector<int>** assign(vector<vector<Point>>*, vector<pair<vector<Point>*, int>>);
+    vector<int>** assign(vector<vector<Point>>*, vector<pair<vector<Point>*, int>>*);
     string get_name();
 };
 
@@ -34,6 +34,6 @@ private:
     string name = "Inverse Assignment";
 public:
     Inverse_assignment(int K, int Grids, int L, int k){this->K = K; this->Grids = Grids; this->L = L; this->k = k;}
-    vector<int>** assign(vector<vector<Point>>*, vector<pair<vector<Point>*, int>>);
+    vector<int>** assign(vector<vector<Point>>*, vector<pair<vector<Point>*, int>>*);
     string get_name();
 };

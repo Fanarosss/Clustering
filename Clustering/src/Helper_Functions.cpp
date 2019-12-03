@@ -367,7 +367,7 @@ int mv_dtw_datatype(vector<vector<double>>* dataset, vector<int>** clusters, vec
 
 int mv_dtw_datatype(vector<vector<double*>>* dataset, vector<int>** clusters, vector<pair<vector<double*>*, int>>* centroids){
 
-    int convergence = 0;
+    int convergence = 1;
     int cluster_size;
     int num_of_centroids = centroids->size();
     double sum, mean;
@@ -376,6 +376,7 @@ int mv_dtw_datatype(vector<vector<double*>>* dataset, vector<int>** clusters, ve
     vector<vector<double*>*> Initial_C;
     for (int i = 0; i < num_of_centroids; i++) {
         cluster_size = clusters[i]->size();
+//        cout <<"CLUSTER SIZE: " <<cluster_size<<endl;
         sum = 0;
         mean = 0;
         for (int k = 0; k < cluster_size; k++) {
@@ -402,9 +403,6 @@ int mv_dtw_datatype(vector<vector<double*>>* dataset, vector<int>** clusters, ve
         vector<double*>* C = new vector<double*>;
         cluster_size = clusters[i]->size();
         vector<double*> A[lamda[i]];
-//        for(int j = 0; j < lamda[i]; j++){
-//            A[j] = {};
-//        }
         for (int k = 0; k < cluster_size; k++) {
             vector<pair<int,int>> pairs;
             DTW_pairs(Initial_C[i], &(*dataset)[(*clusters[i])[k]], &pairs);
@@ -420,6 +418,8 @@ int mv_dtw_datatype(vector<vector<double*>>* dataset, vector<int>** clusters, ve
         point[1] = lamda[i]+1;
         C->push_back(point);
         for (int l = 0; l < lamda[i]; l++){
+            sumx = 0;
+            sumy = 0;
             for(unsigned int m = 0; m < A[l].size(); m++){
                 sumx += A[l][m][0];
                 sumy += A[l][m][1];
@@ -431,13 +431,12 @@ int mv_dtw_datatype(vector<vector<double*>>* dataset, vector<int>** clusters, ve
             point[1] = meany;
             C->push_back(point);
         }
-        if (DTW((*centroids)[i].first, C) > e) convergence++;
         (*centroids)[i].first = C;
         (*centroids)[i].second = -1;
     }
-    for( int i = 0; i < num_of_centroids; i++){
-        cout << "Centroid : " << (*centroids)[i].first << " , ID: " << (*centroids)[i].second << " , Lamda : " << lamda[i] << " , Cluster Size : " << clusters[i]->size() << endl;
-    }
+//    for( int i = 0; i < num_of_centroids; i++){
+//        cout << "Centroid : " << (*centroids)[i].first << " , ID: " << (*centroids)[i].second << " , Lamda : " << lamda[i] << " , Cluster Size : " << clusters[i]->size() << endl;
+//    }
     cout << endl;
     return (convergence != 0) ? 0 : 1;
-}
+} //todo : check convergence
