@@ -82,9 +82,9 @@ int main(int argc, char* argv[]){
     /* Scan the type of data */
     int file_data = Read_input_file(input_file);      // 1 for vectors - 2 for curves - 0 for error
     if(file_data == 1){
-        Cluster_Vectors(input_file, config_file);
+        Cluster_Vectors(input_file, config_file, results_file);
     }else if(file_data == 2){
-        Cluster_Curves(input_file, config_file);
+        Cluster_Curves(input_file, config_file, results_file);
     }else{
         cout << "Input file error!" << endl;
         return -1;
