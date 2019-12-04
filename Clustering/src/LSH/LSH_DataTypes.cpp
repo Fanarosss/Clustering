@@ -7,10 +7,10 @@
 
 using namespace std;
 
-template void compute_unassigned<double>(vector<vector<double>>* ,vector<vector<double>>* , int, double**, int**);
-template void compute_unassigned<double*>(vector<vector<double*>>* ,vector<vector<double*>>* , int, double**, int**);
+template void compute_unassigned<double>(vector<vector<double>>* ,vector<vector<double>>* , vector<int>*, int, double**, int**);
+template void compute_unassigned<double*>(vector<vector<double*>>* ,vector<vector<double*>>* , vector<int>*, int, double**, int**);
 
-void lsh_datatype(vector<vector<double>>* lsh_dataset, vector<vector<double>>* lsh_searchset, int Grids, int k, int L, vector<int>** clusters){
+void lsh_datatype(vector<vector<double>>* lsh_dataset, vector<vector<double>>* lsh_searchset, vector<int>* centroid_ids, int Grids, int k, int L, vector<int>** clusters){
 
     int data_size = lsh_dataset->size();
     /* Arrays for results */
@@ -31,11 +31,11 @@ void lsh_datatype(vector<vector<double>>* lsh_dataset, vector<vector<double>>* l
 
     int iterations = 0;
     while((unassigned_vectors > k) && (iterations < MAX_ITERATIONS)){
-        model->evaluate_clusters(lsh_searchset, &min_distance, &nearest_centroid, &unassigned_vectors);
+        model->evaluate_clusters(lsh_searchset, centroid_ids, &min_distance, &nearest_centroid, &unassigned_vectors);
         iterations++;
     }
     if(unassigned_vectors > 0){
-        compute_unassigned(lsh_dataset, lsh_searchset, data_size, &min_distance, &nearest_centroid);
+        compute_unassigned(lsh_dataset, lsh_searchset, centroid_ids, data_size, &min_distance, &nearest_centroid);
     }
 
     delete (model);
@@ -51,7 +51,7 @@ void lsh_datatype(vector<vector<double>>* lsh_dataset, vector<vector<double>>* l
 
 }
 
-void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>* lsh_searchset, int Grids, int k, int L, vector<int>** clusters){
+void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>* lsh_searchset, vector<int>* centroid_ids, int Grids, int k, int L, vector<int>** clusters){
 
     double delta = 0.00006;
     int d = 2;                                                      /* default 2D curves */
@@ -77,12 +77,12 @@ void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>*
 
         /* ---- LSH model ---- */
         double w = 4 * compute_window(&data_vectored_curves);
-        LSH<double> *model = new LSH<double>(k, L, w);
+        LSH<double>* model = new LSH<double>(k, L, w);
         model->fit(&data_vectored_curves);
 
         int iterations = 0;
         while((unassigned_curves > k) && (iterations < MAX_ITERATIONS)){
-            model->evaluate_clusters(&search_vectored_curves, &min_distance, &nearest_centroid, &unassigned_curves);
+            model->evaluate_clusters(&search_vectored_curves, centroid_ids, &min_distance, &nearest_centroid, &unassigned_curves);
             iterations++;
         }
 
@@ -93,7 +93,7 @@ void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>*
         vector<vector<double>>().swap(search_vectored_curves);
     }
     if(unassigned_curves > 0){
-        compute_unassigned(lsh_dataset, lsh_searchset, data_size, &min_distance, &nearest_centroid);
+        compute_unassigned(lsh_dataset, lsh_searchset, centroid_ids, data_size, &min_distance, &nearest_centroid);
     }
 
     for (int i = 0; i < data_size; i++){
@@ -108,7 +108,7 @@ void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>*
 }
 
 template <typename Point>
-void compute_unassigned(vector<vector<Point>>* lsh_dataset,vector<vector<Point>>* lsh_searchset, int data_size, double** min_distance, int** nearest_centroid){
+void compute_unassigned(vector<vector<Point>>* lsh_dataset,vector<vector<Point>>* lsh_searchset, vector<int>* centroid_ids, int data_size, double** min_distance, int** nearest_centroid){
     double curr_dist;
     /* default metric L1 Manhattan */
     int Metric = 1;
@@ -116,6 +116,11 @@ void compute_unassigned(vector<vector<Point>>* lsh_dataset,vector<vector<Point>>
         if((*nearest_centroid)[i] == -1){
             for(int j = 0; j < lsh_searchset->size(); j++){
                 curr_dist = dist(&lsh_dataset->at(i) ,&lsh_searchset->at(j), lsh_dataset->at(0).size(), Metric);
+//                if((*centroid_ids)[j] == -1){
+//                    curr_dist = dist(&lsh_dataset->at(i) ,&lsh_searchset->at(j), lsh_dataset->at(0).size(), Metric);
+//                }else{
+//                    distance = db->get_distance((*centroid_ids)[j] , i);
+//                }
                 //todo: use already computed distances
                 if (curr_dist < (*min_distance)[i]) {
                     (*min_distance)[i] = curr_dist;

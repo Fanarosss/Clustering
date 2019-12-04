@@ -1,4 +1,10 @@
 #include "HashTable.h"
+#ifndef DATABASE
+#define DATABASE
+
+#include "Database.h"
+
+#endif
 
 using namespace std;
 
@@ -29,6 +35,6 @@ public:
     LSH(int, int, double);
     void fit(vector<vector<Point>>*);
     void evaluate(vector<vector<Point>>*, double, vector<vector<int>>*, Point**, double**, int**);
-    void evaluate_clusters(vector<vector<Point>>*, Point**, int**, int*);
+    void evaluate_clusters(vector<vector<Point>>*, vector<int>*, Point**, int**, int*);
     ~LSH();
 };

@@ -1,7 +1,12 @@
 #include <string>
 #include <vector>
 #include "Library.h"
+#ifndef DATABASE
+#define DATABASE
+
 #include "Database.h"
+
+#endif
 
 using namespace std;
 
@@ -19,9 +24,9 @@ public:
 template <class Point>
 class PAM : public Updater<Point> {
 private:
-    string name;
+    string name = "Partitioning Around Medoids (PAM)";
 public:
-    PAM(int);
+    PAM(int K) {this->K = K;};
     int update(vector<vector<Point>>*, vector<int>**, vector<pair<vector<Point>*, int>>*, DistanceDatabase<Point>*);
     string get_name();
     ~PAM();
@@ -30,9 +35,9 @@ public:
 template <class Point>
 class MV_DTW : public Updater<Point> {
 private:
-    string name;
+    string name = "Mean Vector - DTW centroid Curve";
 public:
-    MV_DTW(int);
+    MV_DTW(int K) {this->K = K;};
     int update(vector<vector<Point>>*, vector<int>**, vector<pair<vector<Point>*, int>>*, DistanceDatabase<Point>*);
     string get_name();
     ~MV_DTW();

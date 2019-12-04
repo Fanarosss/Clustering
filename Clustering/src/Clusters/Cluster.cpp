@@ -59,7 +59,7 @@ void Cluster <Point>::fit(vector<vector<Point>>* dataset, DistanceDatabase<Point
         cout << "Iteration <" << count << ">: " << endl;
         /* assignment */
         cout << '\t' << "Assigner call ..." << endl;
-        this->clusters = assigner->assign(dataset, &this->centroids);
+        this->clusters = assigner->assign(dataset, &this->centroids, db);
         /* update */
         cout << '\t' << "Updater call ..." << endl;
         convergence = updater->update(dataset, this->clusters, &this->centroids, db);

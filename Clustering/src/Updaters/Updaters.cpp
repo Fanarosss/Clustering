@@ -5,12 +5,6 @@
 using namespace std;
 
 template <class Point>
-PAM<Point>::PAM(int K){
-    this->name = "Partitioning Around Medoids (PAM)";
-    this->K = K;
-}
-
-template <class Point>
 int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, vector<pair<vector<Point>*, int>>* centroids, DistanceDatabase<Point>* db) {
     /* minimize Sum(dist(i,t)) over all objects t in cluster C */
     /* OPTIMIZATIONS: 1) compute cluster size only once
@@ -75,12 +69,6 @@ int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, v
 template <class Point>
 string PAM<Point>::get_name() {
     return this->name;
-}
-
-template <class Point>
-MV_DTW<Point>::MV_DTW(int K){
-    this->name = "Mean Vector - DTW centroid Curve";
-    this->K = K;
 }
 
 template <class Point>
