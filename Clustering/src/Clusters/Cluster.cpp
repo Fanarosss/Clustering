@@ -2,8 +2,6 @@
 #include "Cluster.h"
 #include "Helper_Functions.h"
 
-#define MAX_ITERATIONS 10
-
 using namespace std;
 
 template <class Point>

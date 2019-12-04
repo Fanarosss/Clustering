@@ -53,7 +53,7 @@ int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, v
             }
         }
         /* new centroid for this cluster */
-        if ((*centroids)[i].second != t) convergence++;
+        if (db->get_distance((*centroids)[i].second, t) > CONVERGENCE_DISTANCE) convergence++;
         (*centroids)[i].first = &(*dataset)[t];
         (*centroids)[i].second = t;
         /* clear memory */

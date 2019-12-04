@@ -3,8 +3,6 @@
 #include "Helper_Functions.h"
 #include "LSH_DataTypes.h"
 
-#define MAX_ITERATIONS 1000
-
 using namespace std;
 
 template void compute_unassigned<double>(vector<vector<double>>* ,vector<vector<double>>* , vector<int>*, int, double**, int**);
@@ -30,7 +28,7 @@ void lsh_datatype(vector<vector<double>>* lsh_dataset, vector<vector<double>>* l
     model->fit(lsh_dataset);
 
     int iterations = 0;
-    while((unassigned_vectors > k) && (iterations < MAX_ITERATIONS)){
+    while((unassigned_vectors > k) && (iterations < LSH_ITERATIONS)){
         model->evaluate_clusters(lsh_searchset, centroid_ids, &min_distance, &nearest_centroid, &unassigned_vectors);
         iterations++;
     }
@@ -81,7 +79,7 @@ void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>*
         model->fit(&data_vectored_curves);
 
         int iterations = 0;
-        while((unassigned_curves > k) && (iterations < MAX_ITERATIONS)){
+        while((unassigned_curves > k) && (iterations < LSH_ITERATIONS)){
             model->evaluate_clusters(&search_vectored_curves, centroid_ids, &min_distance, &nearest_centroid, &unassigned_curves);
             iterations++;
         }
