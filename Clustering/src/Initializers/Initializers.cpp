@@ -16,9 +16,14 @@ vector<pair<vector<Point>*, int>> Random_Selection<Point>::init(vector<vector<Po
     uniform_int_distribution<int> distribution (0, dataset->size()-1);
     seed = chrono::system_clock::now().time_since_epoch().count();
     default_random_engine generator(seed);
+    vector<int> ids;
     for (int i = 0; i < this->get_K(); i++) {
         id = distribution(generator);
+        while (find(ids.begin(), ids.end(), id) != ids.end()) {
+            id = distribution(generator);
+        }
         centroids.push_back(make_pair(&(*dataset)[id], id));
+        ids.push_back(id);
     }
     return centroids;
 }
