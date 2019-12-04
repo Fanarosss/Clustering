@@ -6,8 +6,8 @@ template <typename Point> double min_distance(int, vector<int>*, vector<vector<P
 
 void show_cluster_usage(string name);
 int Read_input_file(string input);
-int Read_files(vector<vector<double>>*, int*, string, string );
-int Read_files(vector<vector<double*>>*, int*, string, string);
+int Read_files(vector<vector<double>>*, int*, string, string, vector<string>*);
+int Read_files(vector<vector<double*>>*, int*, string, string, vector<string>*);
 double point_dist(double*, double*, int=2);
 double DTW(vector<double*>*, vector<double*>*);
 void DTW_pairs(vector<double*>*, vector<double*>*, vector<pair<int,int>>*);

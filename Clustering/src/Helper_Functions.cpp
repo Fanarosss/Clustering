@@ -35,7 +35,7 @@ int Read_input_file(string input){
     }
 }
 
-int Read_files(vector<vector<double>>* cluster_data, int* cluster_config, string input_file_name, string config_file_name) {
+int Read_files(vector<vector<double>>* cluster_data, int* cluster_config, string input_file_name, string config_file_name, vector<string>* item_ids) {
 
     string line;
     int id;
@@ -53,6 +53,7 @@ int Read_files(vector<vector<double>>* cluster_data, int* cluster_config, string
         stringstream ss(line);
         /* discard id */
         ss >> sid;
+        item_ids->push_back(sid);
         v.push_back(id);
         while (ss >> number) {
             v.push_back(number);
@@ -81,7 +82,7 @@ int Read_files(vector<vector<double>>* cluster_data, int* cluster_config, string
     return 1;
 }
 
-int Read_files(vector<vector<double*>>* cluster_data, int* cluster_config, string input_file_name, string config_file_name) {
+int Read_files(vector<vector<double*>>* cluster_data, int* cluster_config, string input_file_name, string config_file_name, vector<string>* item_ids) {
 
     string line;
     int id, trash;
@@ -100,6 +101,7 @@ int Read_files(vector<vector<double*>>* cluster_data, int* cluster_config, strin
         stringstream ss(line);
         /* id */
         ss >> trash;
+        item_ids->push_back(to_string(trash));
         point = new double [2];
         point[0] = id;
         /* length */

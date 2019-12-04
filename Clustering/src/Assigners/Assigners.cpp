@@ -71,7 +71,7 @@ vector<int>** Lloyd_assignment<Point>::assign(vector<vector<Point>>* dataset, ve
                     if (find(centroid_pool[j].begin(), centroid_pool[j].end(), i) != centroid_pool[j].end()) continue;
 //                    curr_dist = dist((*centroids)[j].first, &(*dataset)[i], dimension);           //todo: already calculated
                     if((*centroids)[j].second == -1){
-                        curr_dist = curr_dist = dist((*centroids)[j].first, &(*dataset)[i], dimension);
+                        curr_dist = dist((*centroids)[j].first, &(*dataset)[i], dimension);
                     }else{
                         curr_dist = db->get_distance((*centroids)[j].second, i);
                     }
@@ -154,7 +154,7 @@ vector<int>** Inverse_assignment<Point>::assign(vector<vector<Point>>* dataset, 
                     if (find(centroid_pool[j].begin(), centroid_pool[j].end(), i) != centroid_pool[j].end()) continue;
 //                    curr_dist = dist((*centroids)[j].first, &(*dataset)[i], dimension);
                     if((*centroids)[j].second == -1){
-                        curr_dist = curr_dist = dist((*centroids)[j].first, &(*dataset)[i], dimension);
+                        curr_dist = dist((*centroids)[j].first, &(*dataset)[i], dimension);
                     }else{
                         curr_dist = db->get_distance((*centroids)[j].second, i);
                     }

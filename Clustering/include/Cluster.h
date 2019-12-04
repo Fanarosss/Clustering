@@ -22,5 +22,7 @@ public:
     vector<double> silhouette(vector<vector<Point>>*, DistanceDatabase<Point>*);
     double average_distance(int, vector<int>*, DistanceDatabase<Point>*);
     int find_closest_centroid(pair<vector<Point>*, int>, DistanceDatabase<Point>*);
+    vector<pair<vector<Point>*, int>>* get_centroids() {return &this->centroids;}
+    vector<int>** get_clusters() {return this->clusters;}
     ~Cluster();
 };
