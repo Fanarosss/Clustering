@@ -10,7 +10,7 @@ using namespace std;
 
 template <class Point>
 vector<int>** Lloyd_assignment<Point>::assign(vector<vector<Point>>* dataset, vector<pair<vector<Point>*, int>>* centroids, DistanceDatabase<Point>* db) {
-    cout << '\t' << "Assigning with Lloyd's Assignment" << endl;
+//    cout << '\t' << "Assigning with Lloyd's Assignment" << endl;
     int all_clusters_non_empty = 1;
     int num_of_centroids = centroids->size();
     int data_size = dataset->size();
@@ -56,9 +56,9 @@ vector<int>** Lloyd_assignment<Point>::assign(vector<vector<Point>>* dataset, ve
             //            cout << "Centroid : " << centroid << endl;
             clusters[centroid]->push_back(i);
         }
-        for (int j = 0; j < num_of_centroids; j++){
-            cout << clusters[j]->size() << endl;
-        }
+//        for (int j = 0; j < num_of_centroids; j++){
+//            cout << clusters[j]->size() << endl;
+//        }
         for (int j = 0; j < num_of_centroids; j++){
             if(clusters[j]->size() == 0){
                 //                cout << "HERE : " << j << endl;
@@ -80,8 +80,8 @@ vector<int>** Lloyd_assignment<Point>::assign(vector<vector<Point>>* dataset, ve
                         centroid = i;
                     }
                 }
-                cout << "OLD : " << (*centroids)[j].second << endl;
-                cout << "NEW : " << centroid << endl;
+//                cout << "OLD : " << (*centroids)[j].second << endl;
+//                cout << "NEW : " << centroid << endl;
                 centroid_ids.erase(remove(centroid_ids.begin(), centroid_ids.end(), (*centroids)[j].second ), centroid_ids.end());
                 (*centroids)[j].first = &(*dataset)[centroid];
                 (*centroids)[j].second = centroid;
@@ -99,15 +99,15 @@ string Lloyd_assignment<Point>::get_name() {
 
 template <class Point>
 vector<int>** Inverse_assignment<Point>::assign(vector<vector<Point>>* dataset, vector<pair<vector<Point>*, int>>* centroids, DistanceDatabase<Point>* db) {
-    cout << '\t' << "Assigning with Inverse Assignment" << endl;
+//    cout << '\t' << "Assigning with Inverse Assignment" << endl;
     int all_clusters_non_empty = 1;
     int num_of_centroids = centroids->size();
     int data_size = dataset->size();
     int dimension = (*dataset)[0].size() - 1;
 //
-    for( int i = 0; i < num_of_centroids; i++){
-        cout << "Centroid : " << (*centroids)[i].first << " , ID: " << (*centroids)[i].second << endl;
-    }
+//    for( int i = 0; i < num_of_centroids; i++){
+//        cout << "Centroid : " << (*centroids)[i].first << " , ID: " << (*centroids)[i].second << endl;
+//    }
 
     vector<int>** clusters;
     clusters = new vector<int>*[num_of_centroids];
@@ -137,9 +137,9 @@ vector<int>** Inverse_assignment<Point>::assign(vector<vector<Point>>* dataset, 
         /* LSH Call for Vectors or Curves */
         lsh_datatype(dataset, &lsh_searchset, &centroid_ids, this->Grids, this->k, this->L, clusters);
 
-        for (int j = 0; j < num_of_centroids; j++){
-            cout << clusters[j]->size() << endl;
-        }
+//        for (int j = 0; j < num_of_centroids; j++){
+//            cout << clusters[j]->size() << endl;
+//        }
         int centroid;
         double max_dist, curr_dist;
         for (int j = 0; j < num_of_centroids; j++){
@@ -163,8 +163,8 @@ vector<int>** Inverse_assignment<Point>::assign(vector<vector<Point>>* dataset, 
                         centroid = i;
                     }
                 }
-                cout << "OLD : " << (*centroids)[j].second << endl;
-                cout << "NEW : " << centroid << endl;
+//                cout << "OLD : " << (*centroids)[j].second << endl;
+//                cout << "NEW : " << centroid << endl;
                 centroid_ids.erase(remove(centroid_ids.begin(), centroid_ids.end(), (*centroids)[j].second ), centroid_ids.end());
                 (*centroids)[j].first = &(*dataset)[centroid];
                 (*centroids)[j].second = centroid;

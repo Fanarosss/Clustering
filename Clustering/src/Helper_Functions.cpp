@@ -348,7 +348,7 @@ int mv_dtw_datatype(vector<vector<double>>* dataset, vector<int>** clusters, vec
     int dimension = (*dataset)[0].size() - 1;
     for (int i = 0; i < num_of_centroids; i++) {
         vector<double>* new_centroid = new vector<double>;
-        cout << '\t' << "Cluster<" << i << "> " << endl;
+//        cout << '\t' << "Cluster<" << i << "> " << endl;
         /* size */
         cluster_size = clusters[i]->size();
         for (int j = 0; j < dimension; j++) {
@@ -439,6 +439,6 @@ int mv_dtw_datatype(vector<vector<double*>>* dataset, vector<int>** clusters, ve
 //    for( int i = 0; i < num_of_centroids; i++){
 //        cout << "Centroid : " << (*centroids)[i].first << " , ID: " << (*centroids)[i].second << " , Lamda : " << lamda[i] << " , Cluster Size : " << clusters[i]->size() << endl;
 //    }
-    cout << endl;
+//    cout << endl;
     return (convergence != 0) ? 0 : 1;
 } //todo : check convergence

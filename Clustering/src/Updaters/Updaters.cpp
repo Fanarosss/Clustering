@@ -14,9 +14,9 @@ int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, v
     int t, row, col, cluster_size;
     double sum, min;
     double **distances;
-    cout << '\t' << "Updating with PAM: " << endl;
+//    cout << '\t' << "Updating with PAM: " << endl;
     for (int i = 0; i < this->get_K(); i++) {
-        cout << '\t' << "Cluster<" << i << "> " << endl;
+//        cout << '\t' << "Cluster<" << i << "> " << endl;
         min = DBL_MAX;
         /* size */
         cluster_size = clusters[i]->size();
@@ -62,7 +62,7 @@ int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, v
         }
         delete[] distances;
     }
-    cout << endl;
+//    cout << endl;
     return (convergence != 0) ? 0 : 1;
 }
 
@@ -74,7 +74,7 @@ string PAM<Point>::get_name() {
 template <class Point>
 int MV_DTW<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, vector<pair<vector<Point>*, int>>* centroids, DistanceDatabase<Point>* db) {
 
-    cout << '\t' << "Updating with MV_DTW: " << endl;
+//    cout << '\t' << "Updating with MV_DTW: " << endl;
 
     int convergence = mv_dtw_datatype(dataset, clusters, centroids);
 //    cout << "Convergence : " << convergence << endl;

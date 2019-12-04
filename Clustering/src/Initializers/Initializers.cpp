@@ -8,7 +8,7 @@ using namespace std;
 
 template <class Point>
 vector<pair<vector<Point>*, int>> Random_Selection<Point>::init(vector<vector<Point>>* dataset) {
-    cout << '\t' << "Initializing with Random Selection" << endl;
+//    cout << '\t' << "Initializing with Random Selection" << endl;
 
     vector<pair<vector<Point>*, int>> centroids;
     int id;
@@ -35,7 +35,7 @@ string Random_Selection<Point>::get_name() {
 
 template <class Point>
 vector<pair<vector<Point>*, int>> KMeans_plusplus<Point>::init(vector<vector<Point>>* dataset) {
-    cout << "Initializing with K-Means++" << endl;
+//    cout << "Initializing with K-Means++" << endl;
     int r, id;
     /* # of centroids */
     int t = 1;

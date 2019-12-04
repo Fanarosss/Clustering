@@ -2,6 +2,8 @@
 #include "Cluster.h"
 #include "Helper_Functions.h"
 
+#define MAX_ITERATIONS 10
+
 using namespace std;
 
 template <class Point>
@@ -16,7 +18,7 @@ Cluster <Point>::Cluster(int* cluster_conf, string Initializer, string Assigner,
     this->k = cluster_conf[3];
 
     /* Initializer */
-    cout << "------Configuration------" << endl;
+    cout << "--------Configuration--------" << endl;
     if (Initializer == "Random Selection") {
         this->initializer = new Random_Selection<Point>(this->K);
     } else if (Initializer == "K-Means++") {
@@ -24,7 +26,7 @@ Cluster <Point>::Cluster(int* cluster_conf, string Initializer, string Assigner,
     } else {
         cerr << "Unknown Initializer";
     }
-    cout << '\t' << "Initializer: " << initializer->get_name() << endl;
+    cout << "Initializer: " << initializer->get_name() << endl;
     /* Assigner */
     if (Assigner == "Lloyd's Assignment") {
         this->assigner = new Lloyd_assignment<Point>(this->K, this->Grids, this->L, this->k);
@@ -33,7 +35,7 @@ Cluster <Point>::Cluster(int* cluster_conf, string Initializer, string Assigner,
     } else {
         cerr << "Unknown Assigner";
     }
-    cout << '\t' << "Assigner: " << assigner->get_name() << endl;
+    cout  << "Assigner: " << assigner->get_name() << endl;
     /* Updater */
     if (Updater == "Partitioning Around Medoids (PAM)") {
         this->updater = new PAM<Point>(this->K);
@@ -42,38 +44,40 @@ Cluster <Point>::Cluster(int* cluster_conf, string Initializer, string Assigner,
     } else {
         cerr << "Unknown Updater";
     }
-    cout << '\t' << "Updater: " << updater->get_name() << endl << "-----------------------" << endl;
+    cout << "Updater: " << updater->get_name() << endl;
+    cout << "-----------------------------" << endl;
 }
 
 template <class Point>
 void Cluster <Point>::fit(vector<vector<Point>>* dataset, DistanceDatabase<Point>* db) {
     int convergence = 0;
     int count = 0;
-    //for testing = 10
-    int max_comps = 10;
     /* initialization */
     this->centroids = initializer->init(dataset);
     /* repeat until no change in clusters */
-    cout << endl;
     do {
-        cout << "Iteration <" << count << ">: " << endl;
+        cout << "\tIteration <" << count+1 << "> " << endl;
         /* assignment */
-        cout << '\t' << "Assigner call ..." << endl;
+//        cout << '\t' << "Assigner call ..." << endl;
         this->clusters = assigner->assign(dataset, &this->centroids, db);
         /* update */
-        cout << '\t' << "Updater call ..." << endl;
+//        cout << '\t' << "Updater call ..." << endl;
         convergence = updater->update(dataset, this->clusters, &this->centroids, db);
         count++;
         /* check convergence */
         if (convergence == 1) break;
-        if (count == max_comps)   break;
+        if (count == MAX_ITERATIONS)   break;
+    }while(1);
+    if( convergence == 1 ){
+        cout << " Reached Convergence " << endl;
+    }else{
+        cout << " Reached MAX ITERATIONS " << endl;
     }
-    while(1);
 }
 
 template <class Point>
 vector<double> Cluster <Point>::silhouette(vector<vector<Point>>* cluster_data, DistanceDatabase<Point>* db) {
-    cout << "Silhouette for cluster statistics ..." << endl;
+//    cout << "Silhouette for cluster statistics ..." << endl;
     double a, b;
     double s = 0;
     vector<double> slt;
