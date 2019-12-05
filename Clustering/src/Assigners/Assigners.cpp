@@ -41,12 +41,12 @@ vector<int>** Lloyd_assignment<Point>::assign(vector<vector<Point>>* dataset, ve
             min_dist = DBL_MAX;
             //            cout << "DATA " << i << " : " << endl;
             for (int j = 0; j < num_of_centroids; j++) {
-                curr_dist = dist((*centroids)[j].first, &(*dataset)[i], dimension);                //todo: already calculated
-//                if((*centroids)[j].second == -1){
-//                    curr_dist = dist((*centroids)[j].first, &(*dataset)[i], dimension);
-//                }else{
-//                    curr_dist = db->get_distance((*centroids)[j].second, i);
-//                }
+//                curr_dist = dist((*centroids)[j].first, &(*dataset)[i], dimension);                //todo: already calculated
+                if((*centroids)[j].second == -1){
+                    curr_dist = curr_dist = dist((*centroids)[j].first, &(*dataset)[i], dimension);
+                }else{
+                    curr_dist = db->get_distance((*centroids)[j].second, i);
+                }
                 //                cout << curr_dist << endl;
                 if (curr_dist < min_dist) {
                     min_dist = curr_dist;
@@ -61,27 +61,27 @@ vector<int>** Lloyd_assignment<Point>::assign(vector<vector<Point>>* dataset, ve
 //        }
         for (int j = 0; j < num_of_centroids; j++){
             if(clusters[j]->size() == 0){
-                                cout << "HERE : " << j << endl;
-//                centroid_pool[j].push_back((*centroids)[j].second);
+                //                cout << "HERE : " << j << endl;
+                centroid_pool[j].push_back((*centroids)[j].second);
                 all_clusters_non_empty = 1;
                 centroid = -1;
                 max_dist = 0;
                 for (int i = 0; i < data_size; i++) {
                     if (find(centroid_ids.begin(), centroid_ids.end(), i) != centroid_ids.end()) continue;
-//                    if (find(centroid_pool[j].begin(), centroid_pool[j].end(), i) != centroid_pool[j].end()) continue;
-                    curr_dist = dist((*centroids)[j].first, &(*dataset)[i], dimension);           //todo: already calculated
-//                    if((*centroids)[j].second == -1){
-//                        curr_dist = dist((*centroids)[j].first, &(*dataset)[i], dimension);
-//                    }else{
-//                        curr_dist = db->get_distance((*centroids)[j].second, i);
-//                    }
+                    if (find(centroid_pool[j].begin(), centroid_pool[j].end(), i) != centroid_pool[j].end()) continue;
+//                    curr_dist = dist((*centroids)[j].first, &(*dataset)[i], dimension);           //todo: already calculated
+                    if((*centroids)[j].second == -1){
+                        curr_dist = dist((*centroids)[j].first, &(*dataset)[i], dimension);
+                    }else{
+                        curr_dist = db->get_distance((*centroids)[j].second, i);
+                    }
                     if (curr_dist > max_dist) {
                         max_dist = curr_dist;
                         centroid = i;
                     }
                 }
-                cout << "OLD : " << (*centroids)[j].second << endl;
-                cout << "NEW : " << centroid << endl;
+//                cout << "OLD : " << (*centroids)[j].second << endl;
+//                cout << "NEW : " << centroid << endl;
                 centroid_ids.erase(remove(centroid_ids.begin(), centroid_ids.end(), (*centroids)[j].second ), centroid_ids.end());
                 (*centroids)[j].first = &(*dataset)[centroid];
                 (*centroids)[j].second = centroid;
@@ -152,12 +152,12 @@ vector<int>** Inverse_assignment<Point>::assign(vector<vector<Point>>* dataset, 
                 for (int i = 0; i < data_size; i++) {
                     if (find(centroid_ids.begin(), centroid_ids.end(), i) != centroid_ids.end()) continue;
                     if (find(centroid_pool[j].begin(), centroid_pool[j].end(), i) != centroid_pool[j].end()) continue;
-                    curr_dist = dist((*centroids)[j].first, &(*dataset)[i], dimension);
-//                    if((*centroids)[j].second == -1){
-//                        curr_dist = dist((*centroids)[j].first, &(*dataset)[i], dimension);
-//                    }else{
-//                        curr_dist = db->get_distance((*centroids)[j].second, i);
-//                    }
+//                    curr_dist = dist((*centroids)[j].first, &(*dataset)[i], dimension);
+                    if((*centroids)[j].second == -1){
+                        curr_dist = dist((*centroids)[j].first, &(*dataset)[i], dimension);
+                    }else{
+                        curr_dist = db->get_distance((*centroids)[j].second, i);
+                    }
                     if (curr_dist > max_dist) {
                         max_dist = curr_dist;
                         centroid = i;

@@ -26,3 +26,6 @@ public:
     vector<int>** get_clusters() {return this->clusters;}
     ~Cluster();
 };
+
+void clear_centroids(vector<pair<vector<double>*, int>>*);
+void clear_centroids(vector<pair<vector<double*>*, int>>*);

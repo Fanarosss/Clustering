@@ -136,7 +136,36 @@ int Cluster <Point>::find_closest_centroid(pair<vector<Point>*,int> centroid, Di
 template <class Point>
 Cluster <Point>::~Cluster(){
     delete (this->initializer);
+    delete (this->assigner);
+
+    clear_centroids(&centroids);
+
+    delete (this->updater);
+
+    for (int i = 0; i < this->K; i++)
+        delete (this->clusters[i]);
+    delete[] this->clusters;
 }
 
 template class Cluster<double>;
 template class Cluster<double*>;
+
+void clear_centroids(vector<pair<vector<double>*, int>>* centroids) {
+
+    for (int i = 0; i < centroids->size(); i++) {
+        if ((*centroids)[i].second == -1)
+            delete ((*centroids)[i].first);
+    }
+
+    return;
+}
+
+void clear_centroids(vector<pair<vector<double*>*, int>>* centroids) {
+
+    for (int i = 0; i < centroids->size(); i++) {
+        if ((*centroids)[i].second == -1)
+            delete ((*centroids)[i].first);
+    }
+
+    return;
+}

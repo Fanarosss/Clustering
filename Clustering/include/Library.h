@@ -17,5 +17,5 @@
 #include <typeinfo>
 
 #define LSH_ITERATIONS 10
-#define MAX_ITERATIONS 100
+#define MAX_ITERATIONS 15
 #define CONVERGENCE_DISTANCE 1

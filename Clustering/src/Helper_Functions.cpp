@@ -1,5 +1,7 @@
 #include "Helper_Functions.h"
 
+#define e 10
+
 using namespace std;
 
 template double min_distance<double>(int, vector<int>*, vector<vector<double>>*);
@@ -346,11 +348,11 @@ int mv_dtw_datatype(vector<vector<double>>* dataset, vector<int>** clusters, vec
     int dimension = (*dataset)[0].size() - 1;
     for (int i = 0; i < num_of_centroids; i++) {
         vector<double>* new_centroid = new vector<double>;
+        /* as an id */
         new_centroid->push_back(-1);
-//        cout << '\t' << "Cluster<" << i << "> " << endl;
         /* size */
         cluster_size = clusters[i]->size();
-        for (int j = 0; j < dimension; j++) {
+        for (int j = 1; j <= dimension; j++) {
             sum = 0;
             mean = 0;
             for (int k = 0; k < cluster_size; k++) {
