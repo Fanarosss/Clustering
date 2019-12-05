@@ -72,6 +72,11 @@ void Cluster <Point>::fit(vector<vector<Point>>* dataset, DistanceDatabase<Point
 
         count++;
 
+        /* clear memory from previous clusters */
+        for (int c = 0; c < this->K; c++)
+            delete (this->clusters[c]);
+        delete[] this->clusters;
+
         /* Break Check for convergence */
         if (convergence == 1) {
             /* last assign after the convergence centroids */
@@ -84,6 +89,7 @@ void Cluster <Point>::fit(vector<vector<Point>>* dataset, DistanceDatabase<Point
             this->clusters = assigner->assign(dataset, &this->centroids, db);
             break;
         }
+
     }while(1);
 
     if( convergence == 1 ){
@@ -177,9 +183,9 @@ template class Cluster<double*>;
 
 void clear_centroids(vector<pair<vector<double>*, int>>* centroids) {
 
-    for (int i = 0; i < centroids->size(); i++) {
-        if ((*centroids)[i].second == -1)
-            delete ((*centroids)[i].first);
+    for (auto centroid : *centroids) {
+        if (centroid.second == -1)
+            delete (centroid.first);
     }
 
     return;
@@ -187,9 +193,13 @@ void clear_centroids(vector<pair<vector<double>*, int>>* centroids) {
 
 void clear_centroids(vector<pair<vector<double*>*, int>>* centroids) {
 
-    for (int i = 0; i < centroids->size(); i++) {
-        if ((*centroids)[i].second == -1)
-            delete ((*centroids)[i].first);
+    for (auto centroid : *centroids) {
+        if (centroid.second == -1) {
+            for (auto point : *centroid.first) {
+                delete[] point;
+            }
+            delete (centroid.first);
+        }
     }
 
     return;

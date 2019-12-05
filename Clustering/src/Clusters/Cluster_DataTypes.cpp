@@ -198,6 +198,12 @@ int Cluster_Curves(string input_file, string config_file, string results_file, i
     }
     results.close();
     cout << "Program completed successfully!" << endl;
+    /* clear dataset */
+    for (auto it : cluster_data){
+        for (auto point : it) {
+            delete[] point;
+        }
+    }
     delete[] cluster_config;
     delete (db);
     return 0;

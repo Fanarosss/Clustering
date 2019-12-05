@@ -118,6 +118,9 @@ int mv_dtw_datatype(vector<vector<double>>* dataset, vector<int>** clusters, vec
         /* Calculate distance of previous and current centroid */
         if (dist((*centroids)[i].first, new_centroid, dimension) / global_mean > MEAN_PERCENTAGE_RATE_LOWERBOUND) convergence++;
 
+        /* clear centroid memory that's been allocated by k-means */
+        if ((*centroids)[i].second == -1)   delete ((*centroids)[i].first);
+
         /* Update centroid pointer and ID */
         (*centroids)[i].first = new_centroid;
         (*centroids)[i].second = -1;
@@ -216,11 +219,24 @@ int mv_dtw_datatype(vector<vector<double*>>* dataset, vector<int>** clusters, ve
             convergence++;
         }
 
+        /* clear centroid memory that's been allocated by k-means */
+        if ((*centroids)[i].second == -1) {
+            for (auto point : *(*centroids)[i].first) {
+                delete[] point;
+            }
+            delete ((*centroids)[i].first);
+        }
+
         /* Update centroid pointer and ID */
         (*centroids)[i].first = C;
         (*centroids)[i].second = -1;
     }
 
+    for (int i = 0; i < Initial_C.size(); i++) {
+        delete[] (*Initial_C[i])[0];
+        delete Initial_C[i];
+    }
+
     /* If all new centroids and previous centroids had distance < CONVERGENCE_DISTANCE, then convergence reached */
     return (convergence != 0) ? 0 : 1;
-} //todo : check convergence
+}

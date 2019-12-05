@@ -305,6 +305,11 @@ void DTW_pairs(vector<double*>* P, vector<double*>* Q, vector<pair<int,int>>* pa
     }
     pairs->insert(pairs->begin(), make_pair(0,0));
 
+    /* Free allocated space */
+    for (int i = 0; i < m1; i++) {
+        delete[] c[i];
+    }
+    delete[] c;
 }
 
 double min(double x, double y, double z) {
