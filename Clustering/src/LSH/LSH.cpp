@@ -177,6 +177,9 @@ void LSH<Point>::evaluate(vector<vector<Point>>* searchset, double R, vector<vec
 }
 
 
+
+/* Clustering LSH */
+
 template <class Point>
 void LSH<Point>::evaluate_clusters(vector<vector<Point>>* searchset, vector<int>* centroid_ids, Point** min_distance, int** nearest_centroid, int* unassigned_vectors) {
     /* ------------------------ QUERY SEARCH ----------------------------*/
@@ -238,12 +241,7 @@ void LSH<Point>::evaluate_clusters(vector<vector<Point>>* searchset, vector<int>
             for (int j = 0; j < ANN[i][q].size(); j++) {
                 /* Check points that have the same amplified g */
                 if (query_amplified_g[i][q] == data_amplified_g[i][(int)ANN[i][q][j][0]]) {
-                    distance = dist(&ANN[i][q][j], &searchset->at(q), dataset->at(0).size(), Metric); //todo: check again
-//                    if((*centroid_ids)[q] == -1){
-//                        distance = dist(&ANN[i][q][j], &searchset->at(q), dataset->at(0).size(), Metric);
-//                    }else{
-//                        distance = db->get_distance((*centroid_ids)[q] , (int)ANN[i][q][j][0]);
-//                    }
+                    distance = dist(&ANN[i][q][j], &searchset->at(q), dataset->at(0).size(), Metric);
                     /* Find Nearest Centroid */
                     if((*nearest_centroid)[(int)ANN[i][q][j][0]] == -1){
                         (*unassigned_vectors)--;

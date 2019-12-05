@@ -6,17 +6,19 @@ using namespace std;
 
 template <class Point>
 Cluster <Point>::Cluster(int* cluster_conf, string Initializer, string Assigner, string Updater) {
-    /* number of clusters*/
+
+    /* Number of clusters*/
     this->K = cluster_conf[0];
-    /* number of grids*/
+    /* Number of grids*/
     this->Grids = cluster_conf[1];
-    /* number of vector hash tables*/
+    /* Number of vector hash tables*/
     this->L = cluster_conf[2];
-    /* number of vector hash functions*/
+    /* Number of vector hash functions*/
     this->k = cluster_conf[3];
 
-    /* Initializer */
     cout << "--------Configuration--------" << endl;
+
+    /* Initializer */
     if (Initializer == "Random Selection") {
         this->initializer = new Random_Selection<Point>(this->K);
     } else if (Initializer == "K-Means++") {
@@ -25,6 +27,7 @@ Cluster <Point>::Cluster(int* cluster_conf, string Initializer, string Assigner,
         cerr << "Unknown Initializer";
     }
     cout << "Initializer: " << initializer->get_name() << endl;
+
     /* Assigner */
     if (Assigner == "Lloyd's Assignment") {
         this->assigner = new Lloyd_assignment<Point>(this->K, this->Grids, this->L, this->k);
@@ -34,6 +37,7 @@ Cluster <Point>::Cluster(int* cluster_conf, string Initializer, string Assigner,
         cerr << "Unknown Assigner";
     }
     cout  << "Assigner: " << assigner->get_name() << endl;
+
     /* Updater */
     if (Updater == "Partitioning Around Medoids (PAM)") {
         this->updater = new PAM<Point>(this->K);
@@ -43,29 +47,36 @@ Cluster <Point>::Cluster(int* cluster_conf, string Initializer, string Assigner,
         cerr << "Unknown Updater";
     }
     cout << "Updater: " << updater->get_name() << endl;
+
     cout << "-----------------------------" << endl;
 }
 
 template <class Point>
 void Cluster <Point>::fit(vector<vector<Point>>* dataset, DistanceDatabase<Point>* db) {
+
     int convergence = 0;
     int count = 0;
-    /* initialization */
+
+    /* Initialization */
     this->centroids = initializer->init(dataset);
-    /* repeat until no change in clusters */
+
+    /* Repeat until MAX ITERATIONS or Convergence reached */
     do {
         cout << "\tIteration <" << count+1 << "> " << endl;
-        /* assignment */
-//        cout << '\t' << "Assigner call ..." << endl;
+
+        /* Assignment */
         this->clusters = assigner->assign(dataset, &this->centroids, db);
-        /* update */
-//        cout << '\t' << "Updater call ..." << endl;
+
+        /* Update */
         convergence = updater->update(dataset, this->clusters, &this->centroids, db);
+
         count++;
-        /* check convergence */
+
+        /* Break Check */
         if (convergence == 1) break;
         if (count == MAX_ITERATIONS)   break;
     }while(1);
+
     if( convergence == 1 ){
         cout << " Reached Convergence " << endl;
     }else{
@@ -75,7 +86,7 @@ void Cluster <Point>::fit(vector<vector<Point>>* dataset, DistanceDatabase<Point
 
 template <class Point>
 vector<double> Cluster <Point>::silhouette(vector<vector<Point>>* cluster_data, DistanceDatabase<Point>* db) {
-//    cout << "Silhouette for cluster statistics ..." << endl;
+
     double a, b;
     double s = 0;
     vector<double> slt;

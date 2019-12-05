@@ -42,3 +42,6 @@ public:
     string get_name();
     ~MV_DTW();
 };
+
+int mv_dtw_datatype(vector<vector<double>>*, vector<int>**, vector<pair<vector<double>*, int>>*);
+int mv_dtw_datatype(vector<vector<double*>>*, vector<int>**, vector<pair<vector<double*>*, int>>*);

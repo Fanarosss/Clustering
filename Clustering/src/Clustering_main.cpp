@@ -80,7 +80,8 @@ int main(int argc, char* argv[]){
     } else rf = 0;
 
     /* Scan the type of data */
-    int file_data = Read_input_file(input_file);      // 1 for vectors - 2 for curves - 0 for error
+    int file_data = Read_input_file(input_file);
+    /* 1 = Vectors, 2 = Curves, 0 = Error */
     if(file_data == 1){
         Cluster_Vectors(input_file, config_file, results_file, complete);
     }else if(file_data == 2){

@@ -8,15 +8,17 @@ using namespace std;
 
 template <class Point>
 vector<pair<vector<Point>*, int>> Random_Selection<Point>::init(vector<vector<Point>>* dataset) {
-//    cout << '\t' << "Initializing with Random Selection" << endl;
 
-    vector<pair<vector<Point>*, int>> centroids;
+
     int id;
     unsigned seed;
+    vector<int> ids;
+    vector<pair<vector<Point>*, int>> centroids;
+
     uniform_int_distribution<int> distribution (0, dataset->size()-1);
     seed = chrono::system_clock::now().time_since_epoch().count();
     default_random_engine generator(seed);
-    vector<int> ids;
+
     for (int i = 0; i < this->get_K(); i++) {
         id = distribution(generator);
         while (find(ids.begin(), ids.end(), id) != ids.end()) {
@@ -35,7 +37,7 @@ string Random_Selection<Point>::get_name() {
 
 template <class Point>
 vector<pair<vector<Point>*, int>> KMeans_plusplus<Point>::init(vector<vector<Point>>* dataset) {
-//    cout << "Initializing with K-Means++" << endl;
+
     int r, id;
     /* # of centroids */
     int t = 1;
