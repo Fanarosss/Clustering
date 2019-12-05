@@ -53,21 +53,21 @@ int Cluster_Vectors(string input_file, string config_file, string results_file, 
                 /* Clustering Results Output */
                 results << "Algorithm: " << algorithm << endl;
                 for( int a = 0; a < centroids->size(); a++){
-                    results << "CLUSTER-" << a+1 << " {size: " << clusters[a]->size() << ", centroid: ";
+                    results << "CLUSTER-" << a+1 << " {size: " << setw(4) << setfill('0') << clusters[a]->size() << ", centroid: ";
                     if((*centroids)[a].second == -1){
                         results << " { ";
                         for ( int b = 1; b < (*centroids)[a].first->size(); b++){
-                            results << (*(*centroids)[a].first)[b];
+                            results << setprecision(5) << showpoint << fixed << (*(*centroids)[a].first)[b];
                             if( b+1 != (*centroids)[a].first->size()){
                                 results << ", ";
                             }
                         }
                         results << " } " << endl;
                     }else{
-                        results << (*centroids)[a].second << "}" << endl;
+                        results << setw(4) << setfill('0') << item_ids[(*centroids)[a].second] << "}" << endl;
                     }
                 }
-                results << "clustering time: " << clustering_time << endl;
+                results << "Clustering Time: " << clustering_time << endl;
 
                 /* Silhouettes Results Output */
                 results << "Silhouette: [";
@@ -150,21 +150,21 @@ int Cluster_Curves(string input_file, string config_file, string results_file, i
                 /* Clustering Results Output */
                 results << "Algorithm: " << algorithm << endl;
                 for( int a = 0; a < centroids->size(); a++){
-                    results << "CLUSTER-" << a+1 << " {size: " << clusters[a]->size() << ", centroid: ";
+                    results << "CLUSTER-" << a+1 << " {size: " << setw(4) << setfill('0') << clusters[a]->size() << ", centroid: ";
                     if((*centroids)[a].second == -1){
                         results << " { ";
                         for ( int b = 1; b < (*centroids)[a].first->size(); b++){
-                            results << "(" <<  (*(*centroids)[a].first)[b][0] << " , " << (*(*centroids)[a].first)[b][1] << ")";
+                            results << "(" << setprecision(5) << showpoint << fixed << (*(*centroids)[a].first)[b][0] << " , " << setprecision(5) << showpoint << fixed << (*(*centroids)[a].first)[b][1] << ")";
                             if( b+1 != (*centroids)[a].first->size()){
                                 results << ", ";
                             }
                         }
                         results << " } " << endl;
                     }else{
-                        results << (*centroids)[a].second << "}" << endl;
+                        results << setw(4) << setfill('0') << item_ids[(*centroids)[a].second] << "}" << endl;
                     }
                 }
-                results << "clustering time: " << clustering_time << endl;
+                results << "Clustering Time: " << clustering_time << endl;
 
                 /* Silhouettes Results Output */
                 results << "Silhouette: [";
@@ -198,6 +198,7 @@ int Cluster_Curves(string input_file, string config_file, string results_file, i
     }
     results.close();
     cout << "Program completed successfully!" << endl;
+
     /* clear dataset */
     for (auto it : cluster_data){
         for (auto point : it) {
