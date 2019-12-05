@@ -77,7 +77,7 @@ int Cluster_Vectors(string input_file, string config_file, string results_file, 
                     silhouette_total += Silhouettes[i];
                 }
                 silhouette_total = silhouette_total / Silhouettes.size();
-                results << silhouette_total << "]" << endl << endl
+                results << silhouette_total << "]" << endl << endl;
 
                 /* Complete Option Output */
                 if( complete == 1 ){

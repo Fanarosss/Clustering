@@ -13,9 +13,8 @@ int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, v
      *                because of the symmetry dist(i,j) == dist(j,i) */
     int convergence = 0;
     int t, row, col, cluster_size;
-    double sum, min;
+    double sum, min, objective_function;
     for (int i = 0; i < this->get_K(); i++) {
-        min = DBL_MAX;
         /* size */
         cluster_size = clusters[i]->size();
         /* distance for the current centroid */
@@ -23,6 +22,7 @@ int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, v
         for (int j = 0; j < cluster_size; j++) {
             sum += db->get_distance((*clusters[i])[j], (*centroids)[i].second);
         }
+        objective_function = sum;
         min = sum;
         t = (*centroids)[i].second;
         /* iterate over cluster data */
@@ -44,7 +44,7 @@ int PAM<Point>::update(vector<vector<Point>>* dataset, vector<int>** clusters, v
             }
         }
         /* new centroid for this cluster */
-        if (db->get_distance((*centroids)[i].second, t) > CONVERGENCE_DISTANCE) convergence++;
+        if ( objective_function == 0 || (fabs(objective_function - min) / objective_function) > RATE_OF_CHANGE_LOWERBOUND) convergence++;
         (*centroids)[i].first = &(*dataset)[t];
         (*centroids)[i].second = t;
     }
@@ -85,10 +85,11 @@ int mv_dtw_datatype(vector<vector<double>>* dataset, vector<int>** clusters, vec
     int cluster_size;
     int num_of_centroids = centroids->size();
     int dimension = (*dataset)[0].size() - 1;
-    double sum, mean;
+    double sum, mean, global_mean;
 
     /* Loop for every centroid */
     for (int i = 0; i < num_of_centroids; i++) {
+        global_mean = 0.0;
 
         /* Cluster size */
         cluster_size = clusters[i]->size();
@@ -107,11 +108,15 @@ int mv_dtw_datatype(vector<vector<double>>* dataset, vector<int>** clusters, vec
                 sum += (*dataset)[(*clusters[i])[k]][j];
             }
             mean = sum / cluster_size;
+            global_mean += mean;
             new_centroid->push_back(mean);
         }
 
+        /* global mean for rate of centroid change */
+        global_mean /= dimension;
+
         /* Calculate distance of previous and current centroid */
-        if (dist((*centroids)[i].first, new_centroid, dimension) > CONVERGENCE_DISTANCE) convergence++;
+        if (dist((*centroids)[i].first, new_centroid, dimension) / global_mean > MEAN_PERCENTAGE_RATE_LOWERBOUND) convergence++;
 
         /* Update centroid pointer and ID */
         (*centroids)[i].first = new_centroid;
@@ -125,14 +130,15 @@ int mv_dtw_datatype(vector<vector<double>>* dataset, vector<int>** clusters, vec
 /* DTW centroid Curve */
 int mv_dtw_datatype(vector<vector<double*>>* dataset, vector<int>** clusters, vector<pair<vector<double*>*, int>>* centroids){
 
-    int convergence = 1;
+    int convergence = 0;
     int cluster_size;
     int num_of_centroids = centroids->size();
     int lamda[num_of_centroids];
-    double sum, mean;
+    double sum, mean, global_mean;
     double* point;
     vector<vector<double*>*> Initial_C;
 
+    global_mean = 0;
     /* DBA Initialization - Loop to find lamda and Initial_C for every cluster  */
     for (int i = 0; i < num_of_centroids; i++) {
 
@@ -167,7 +173,7 @@ int mv_dtw_datatype(vector<vector<double*>>* dataset, vector<int>** clusters, ve
 
     /* DBA Algorithm - Loop to find Index-Pairs of Best-Traversal and calculate DTW centroid curve */
     for (int i = 0; i < num_of_centroids; i++) {
-
+        global_mean = 0;
         /* DTW_pairs Calculation */
         vector<double*>* C = new vector<double*>;
         cluster_size = clusters[i]->size();
@@ -200,6 +206,14 @@ int mv_dtw_datatype(vector<vector<double*>>* dataset, vector<int>** clusters, ve
             point[0] = meanx;
             point[1] = meany;
             C->push_back(point);
+            global_mean += (meanx + meany) / 2.0;
+        }
+
+        global_mean /= lamda[i];
+
+        /* Calculate distance of previous and current centroid */
+        if ((dist((*centroids)[i].first, C, C->size()) / global_mean) > MEAN_PERCENTAGE_RATE_LOWERBOUND) {
+            convergence++;
         }
 
         /* Update centroid pointer and ID */

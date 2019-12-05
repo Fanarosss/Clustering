@@ -72,9 +72,18 @@ void Cluster <Point>::fit(vector<vector<Point>>* dataset, DistanceDatabase<Point
 
         count++;
 
-        /* Break Check */
-        if (convergence == 1) break;
-        if (count == MAX_ITERATIONS)   break;
+        /* Break Check for convergence */
+        if (convergence == 1) {
+            /* last assign after the convergence centroids */
+            this->clusters = assigner->assign(dataset, &this->centroids, db);
+            break;
+        }
+        /* Break Check for max iterations */
+        if (count == MAX_ITERATIONS) {
+            /* last assign after the the last update of centroids */
+            this->clusters = assigner->assign(dataset, &this->centroids, db);
+            break;
+        }
     }while(1);
 
     if( convergence == 1 ){
@@ -90,8 +99,9 @@ vector<double> Cluster <Point>::silhouette(vector<vector<Point>>* cluster_data, 
     double a, b;
     double s = 0;
     vector<double> slt;
-    int closest_centroid_id;
+    int closest_centroid_id, cluster_size;
     for (int i = 0; i < this->K; i++) {
+        cluster_size = clusters[i]->size();
         s = 0;
         for (int point : *clusters[i]) {
             a = average_distance(point, clusters[i], db);
@@ -99,8 +109,12 @@ vector<double> Cluster <Point>::silhouette(vector<vector<Point>>* cluster_data, 
             b = average_distance(point, clusters[closest_centroid_id], db);
             s += (b - a)/(double)max(a,b);
         }
-        s /= clusters[i]->size();
-        slt.push_back(s);
+        if (cluster_size > 1) {
+            s /= cluster_size;
+            slt.push_back(s);
+        } else {
+            slt.push_back(0);
+        }
     }
     return slt;
 }
