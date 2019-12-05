@@ -89,6 +89,7 @@ int Read_files(vector<vector<double*>>* cluster_data, int* cluster_config, strin
     char bracket, comma;
     double number;
     double* point;
+    double* id_size;
     vector<double*> v;
 
     ifstream input_file(input_file_name);
@@ -102,19 +103,27 @@ int Read_files(vector<vector<double*>>* cluster_data, int* cluster_config, strin
         /* id */
         ss >> trash;
         item_ids->push_back(to_string(trash));
-        point = new double [2];
-        point[0] = id;
+        id_size = new double [2];
+        id_size[0] = id;
         /* length */
-        ss >> point[1];
-        v.push_back(point);
+        ss >> id_size[1];
+        v.push_back(id_size);
         /* for all data points */
+        int curr = 0;
         while (ss >> bracket) {
             point = new double [2];
             ss >> point[0];
             ss >> comma;
             ss >> point[1];
             ss >> bracket;
-            v.push_back(point);
+            /* In case of two consecutive points, do not add the second one on the curve and decrease curve's size by 1 */
+            if((v[curr][0] == point[0]) && (v[curr][1] == point[1])) {
+                delete[] point;
+                v[0][1]--;
+            }else{
+                v.push_back(point);
+                curr++;
+            }
         }
         cluster_data->push_back(v);
         v.clear();
