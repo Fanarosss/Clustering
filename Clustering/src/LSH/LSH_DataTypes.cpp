@@ -65,36 +65,60 @@ void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>*
     vector<vector<double>> search_vectored_curves;
 
     int data_size = lsh_dataset->size();
+    int centroid_num = lsh_searchset->size();
 
     /* Arrays for results */
-    double *min_distance = new double[data_size];
+    double *min_distance = new double[centroid_num];
+    double *min_distance_data = new double[data_size];
+    int *nearest_neighbor = new int[centroid_num];
     int *nearest_centroid = new int[data_size];
+    double *time = new double[centroid_num];
     int unassigned_curves = data_size;
 
     /* Initialize arrays */
-    for (int i = 0; i < data_size; i++) {
+    for (int i = 0; i < centroid_num; i++) {
         min_distance[i] = DBL_MAX;
+        nearest_neighbor[i] = -1;
+        time[i] = 0.0;
+    }
+    for (int i = 0; i < data_size; i++) {
+        min_distance_data[i] = DBL_MAX;
         nearest_centroid[i] = -1;
     }
 
     /* Loop for all Grids */
     for (int i = 0; i < Grids; i++) {
-
         /* Vectorization */
         Grid_Vectorization(delta, d, lsh_dataset, lsh_searchset, &data_vectored_curves, &search_vectored_curves);
 
         /* ---- LSH model ---- */
-        double w = 4 * compute_window(&data_vectored_curves);
+        double w = 400;
         LSH<double>* model = new LSH<double>(k, L, w);
         model->fit(&data_vectored_curves);
 
         int iterations = 0;
-        /* LSH computations until all curves are assigned to centroid or LSH_ITERATIONS reached */
-        while((unassigned_curves > k) && (iterations < LSH_ITERATIONS)){
-            model->evaluate_clusters(&search_vectored_curves, centroid_ids, &min_distance, &nearest_centroid, &unassigned_curves);
-            iterations++;
-        }
+        vector<vector<int>> R_Neighbors;
+        int R = (int)(data_size / (centroid_num)) - 1;
+        /* LSH computations until all vectors are assigned to centroid or LSH_ITERATIONS reached */
+        model->evaluate(&search_vectored_curves, R, &R_Neighbors, &min_distance, &time, &nearest_neighbor);
 
+        for (int j = 0; j < centroid_num; j++) {
+            for (auto centroid_neighbors : R_Neighbors) {
+                for (auto neighbor : centroid_neighbors) {
+                    if (nearest_centroid[neighbor] == -1) {
+                        nearest_centroid[neighbor] = j;
+                        min_distance_data[neighbor] = dist(&lsh_dataset->at(neighbor), &lsh_searchset->at(j), lsh_dataset->at(neighbor).size());
+                    } else {
+                        /* measure distances and take the smaller one */
+                        double distance = dist(&lsh_dataset->at(neighbor), &lsh_searchset->at(j), lsh_dataset->at(neighbor).size());
+                        if (distance < min_distance_data[neighbor]) {
+                            nearest_centroid[neighbor] = j;
+                            min_distance_data[neighbor] = distance;
+                        }
+                    }
+                }
+            }
+        }
         delete (model);
 
         /* Clean Vectors */
@@ -103,19 +127,19 @@ void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>*
     }
 
     /* If there are any unassigned curves, assign them using brute force */
-    if(unassigned_curves > 0){
-        compute_unassigned(lsh_dataset, lsh_searchset, centroid_ids, data_size, &min_distance, &nearest_centroid);
-    }
+    compute_unassigned(lsh_dataset, lsh_searchset, centroid_ids, data_size, &min_distance_data, &nearest_centroid);
 
     /* Fill every cluster with its assigned curves */
     for (int i = 0; i < data_size; i++){
-        if (min_distance[i] == 0) continue;
+        if (find(centroid_ids->begin(), centroid_ids->end(), nearest_centroid[i]) != centroid_ids->end()) continue;
         clusters[nearest_centroid[i]]->push_back(i);
     }
 
     /* Clean Pointers */
     delete[] min_distance;
+    delete[] nearest_neighbor;
     delete[] nearest_centroid;
+    delete[] time;
 
 }
 
