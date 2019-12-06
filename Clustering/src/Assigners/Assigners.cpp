@@ -136,7 +136,7 @@ vector<int>** Inverse_assignment<Point>::assign(vector<vector<Point>>* dataset, 
 
 
         /* LSH Call for Vectors or Curves */
-        lsh_datatype(dataset, &lsh_searchset, &centroid_ids, this->Grids, this->k, this->L, clusters);
+        lsh_datatype(dataset, &lsh_searchset, &centroid_ids, this->Grids, this->k, this->L, clusters, db);
 
         int centroid;
         double max_dist, curr_dist;

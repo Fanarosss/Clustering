@@ -5,10 +5,10 @@
 
 using namespace std;
 
-template void compute_unassigned<double>(vector<vector<double>>* ,vector<vector<double>>* , vector<int>*, int, double**, int**);
-template void compute_unassigned<double*>(vector<vector<double*>>* ,vector<vector<double*>>* , vector<int>*, int, double**, int**);
+template void compute_unassigned<double>(vector<vector<double>>* ,vector<vector<double>>* , vector<int>*, int, double**, int**, DistanceDatabase<double>* db);
+template void compute_unassigned<double*>(vector<vector<double*>>* ,vector<vector<double*>>* , vector<int>*, int, double**, int**, DistanceDatabase<double*>* db);
 
-void lsh_datatype(vector<vector<double>>* lsh_dataset, vector<vector<double>>* lsh_searchset, vector<int>* centroid_ids, int Grids, int k, int L, vector<int>** clusters){
+void lsh_datatype(vector<vector<double>>* lsh_dataset, vector<vector<double>>* lsh_searchset, vector<int>* centroid_ids, int Grids, int k, int L, vector<int>** clusters, DistanceDatabase<double>* db){
 
     int data_size = lsh_dataset->size();
 
@@ -24,7 +24,8 @@ void lsh_datatype(vector<vector<double>>* lsh_dataset, vector<vector<double>>* l
     }
 
     /* ---- LSH model ---- */
-    double w = 4*compute_window(lsh_dataset);
+    //double w = 4*compute_window(lsh_dataset);
+    double w = 4500;
     LSH <double>* model = new LSH <double> (k, L, w);
     model->fit(lsh_dataset);
 
@@ -37,7 +38,7 @@ void lsh_datatype(vector<vector<double>>* lsh_dataset, vector<vector<double>>* l
 
     /* If there are any unassigned vectors, assign them using brute force */
     if(unassigned_vectors > 0){
-        compute_unassigned(lsh_dataset, lsh_searchset, centroid_ids, data_size, &min_distance, &nearest_centroid);
+        compute_unassigned(lsh_dataset, lsh_searchset, centroid_ids, data_size, &min_distance, &nearest_centroid, db);
     }
 
     delete (model);
@@ -54,7 +55,7 @@ void lsh_datatype(vector<vector<double>>* lsh_dataset, vector<vector<double>>* l
 
 }
 
-void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>* lsh_searchset, vector<int>* centroid_ids, int Grids, int k, int L, vector<int>** clusters){
+void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>* lsh_searchset, vector<int>* centroid_ids, int Grids, int k, int L, vector<int>** clusters, DistanceDatabase<double*>* db){
 
     /* default 2D curves */
     int d = 2;
@@ -107,10 +108,24 @@ void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>*
                 for (auto neighbor : centroid_neighbors) {
                     if (nearest_centroid[neighbor] == -1) {
                         nearest_centroid[neighbor] = j;
-                        min_distance_data[neighbor] = dist(&lsh_dataset->at(neighbor), &lsh_searchset->at(j), lsh_dataset->at(neighbor).size());
+                        if((*centroid_ids)[j] == -1){
+                            /* Case of Centroid   -> Calculate Distance */
+                            min_distance_data[neighbor] = dist(&lsh_dataset->at(neighbor), &lsh_searchset->at(j), lsh_dataset->at(neighbor).size());
+                        }else{
+                            /* Case of Medoid -> Find Already Calculated Distance in Database */
+                            min_distance_data[neighbor] = db->get_distance((*centroid_ids)[j], neighbor);
+                        }
+
                     } else {
                         /* measure distances and take the smaller one */
-                        double distance = dist(&lsh_dataset->at(neighbor), &lsh_searchset->at(j), lsh_dataset->at(neighbor).size());
+                        double distance;
+                        if((*centroid_ids)[j] == -1){
+                            /* Case of Centroid   -> Calculate Distance */
+                            distance = dist(&lsh_dataset->at(neighbor), &lsh_searchset->at(j), lsh_dataset->at(neighbor).size());
+                        }else{
+                            /* Case of Medoid -> Find Already Calculated Distance in Database */
+                            distance = db->get_distance((*centroid_ids)[j], neighbor);
+                        }
                         if (distance < min_distance_data[neighbor]) {
                             nearest_centroid[neighbor] = j;
                             min_distance_data[neighbor] = distance;
@@ -127,7 +142,7 @@ void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>*
     }
 
     /* If there are any unassigned curves, assign them using brute force */
-    compute_unassigned(lsh_dataset, lsh_searchset, centroid_ids, data_size, &min_distance_data, &nearest_centroid);
+    compute_unassigned(lsh_dataset, lsh_searchset, centroid_ids, data_size, &min_distance_data, &nearest_centroid, db);
 
     /* Fill every cluster with its assigned curves */
     for (int i = 0; i < data_size; i++){
@@ -147,7 +162,7 @@ void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>*
 /* Function to assign unassigned elements using Brute Force */
 
 template <typename Point>
-void compute_unassigned(vector<vector<Point>>* lsh_dataset,vector<vector<Point>>* lsh_searchset, vector<int>* centroid_ids, int data_size, double** min_distance, int** nearest_centroid){
+void compute_unassigned(vector<vector<Point>>* lsh_dataset,vector<vector<Point>>* lsh_searchset, vector<int>* centroid_ids, int data_size, double** min_distance, int** nearest_centroid, DistanceDatabase<Point>* db){
 
     /* default metric L1 Manhattan */
     int Metric = 1;
@@ -158,7 +173,13 @@ void compute_unassigned(vector<vector<Point>>* lsh_dataset,vector<vector<Point>>
         if((*nearest_centroid)[i] == -1){
             /* For every centroid calculate distance to element and assign to closest */
             for(int j = 0; j < lsh_searchset->size(); j++){
-                curr_dist = dist(&lsh_dataset->at(i) ,&lsh_searchset->at(j), lsh_dataset->at(0).size(), Metric);
+                if((*centroid_ids)[j] == -1){
+                    /* Case of Centroid   -> Calculate Distance */
+                    curr_dist = dist(&lsh_dataset->at(i) ,&lsh_searchset->at(j), lsh_dataset->at(0).size(), Metric);
+                }else{
+                    /* Case of Medoid -> Find Already Calculated Distance in Database */
+                    curr_dist = db->get_distance((*centroid_ids)[j], i);
+                }
                 if (curr_dist < (*min_distance)[i]) {
                     (*min_distance)[i] = curr_dist;
                     (*nearest_centroid)[i] = j;
