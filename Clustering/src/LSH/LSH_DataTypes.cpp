@@ -54,7 +54,6 @@ void lsh_datatype(vector<vector<double>>* lsh_dataset, vector<vector<double>>* l
 }
 
 void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>* lsh_searchset, vector<int>* centroid_ids, int Grids, int k, int L, double w, vector<int>** clusters, DistanceDatabase<double*>* db){
-
     /* default 2D curves */
     int d = 2;
     double delta = 0.00006;
@@ -143,7 +142,7 @@ void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>*
 
     /* Fill every cluster with its assigned curves */
     for (int i = 0; i < data_size; i++){
-        if (find(centroid_ids->begin(), centroid_ids->end(), nearest_centroid[i]) != centroid_ids->end()) continue;
+        if (find(centroid_ids->begin(), centroid_ids->end(), i) != centroid_ids->end()) continue;
         clusters[nearest_centroid[i]]->push_back(i);
     }
 

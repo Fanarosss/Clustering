@@ -155,7 +155,7 @@ int mv_dtw_datatype(vector<vector<double*>>* dataset, vector<int>** clusters, ve
             sum += (*dataset)[(*clusters[i])[k]][0][1];
         }
         mean = sum / cluster_size;
-        lamda[i] = mean;
+        lamda[i] = ceil(mean);
 
         /* Initial_C Calculation */
         for (int k = 0; k < cluster_size; k++) {
