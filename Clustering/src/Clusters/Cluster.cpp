@@ -5,7 +5,7 @@
 using namespace std;
 
 template <class Point>
-Cluster <Point>::Cluster(int* cluster_conf, string Initializer, string Assigner, string Updater) {
+Cluster <Point>::Cluster(int* cluster_conf, string Initializer, string Assigner, string Updater, double w) {
 
     /* Number of clusters*/
     this->K = cluster_conf[0];
@@ -15,6 +15,8 @@ Cluster <Point>::Cluster(int* cluster_conf, string Initializer, string Assigner,
     this->L = cluster_conf[2];
     /* Number of vector hash functions*/
     this->k = cluster_conf[3];
+    /* average distance from neighbor */
+    this->w = w;
 
     cout << "--------Configuration--------" << endl;
 
@@ -32,7 +34,7 @@ Cluster <Point>::Cluster(int* cluster_conf, string Initializer, string Assigner,
     if (Assigner == "Lloyd's Assignment") {
         this->assigner = new Lloyd_assignment<Point>(this->K, this->Grids, this->L, this->k);
     } else if (Assigner == "Inverse Assignment") {
-        this->assigner = new Inverse_assignment<Point>(this->K, this->Grids, this->L, this->k);
+        this->assigner = new Inverse_assignment<Point>(this->K, this->Grids, this->L, this->k, this->w);
     } else {
         cerr << "Unknown Assigner";
     }

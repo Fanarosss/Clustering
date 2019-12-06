@@ -14,10 +14,11 @@ private:
     int Grids;
     int L;
     int k;
+    double w;
     vector<pair<vector<Point>*, int>> centroids;
     vector<int>** clusters;
 public:
-    Cluster(int*, string, string, string);
+    Cluster(int*, string, string, string, double);
     void fit(vector<vector<Point>>*, DistanceDatabase<Point>*);
     vector<double> silhouette(vector<vector<Point>>*, DistanceDatabase<Point>*);
     double average_distance(int, vector<int>*, DistanceDatabase<Point>*);

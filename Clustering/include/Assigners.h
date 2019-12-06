@@ -17,6 +17,7 @@ protected:
     int Grids;
     int L;
     int k;
+    double w;
 public:
     Assigner(){}
     virtual vector<int>** assign(vector<vector<Point>>*, vector<pair<vector<Point>*, int>>*, DistanceDatabase<Point>*) {return NULL;}
@@ -39,7 +40,7 @@ class Inverse_assignment : public Assigner<Point> {
 private:
     string name = "Inverse Assignment";
 public:
-    Inverse_assignment(int K, int Grids, int L, int k){this->K = K; this->Grids = Grids; this->L = L; this->k = k;}
+    Inverse_assignment(int K, int Grids, int L, int k, double w){this->K = K; this->Grids = Grids; this->L = L; this->k = k; this->w = w;}
     vector<int>** assign(vector<vector<Point>>*, vector<pair<vector<Point>*, int>>*, DistanceDatabase<Point>*);
     string get_name();
 };

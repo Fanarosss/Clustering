@@ -8,7 +8,7 @@ using namespace std;
 template void compute_unassigned<double>(vector<vector<double>>* ,vector<vector<double>>* , vector<int>*, int, double**, int**, DistanceDatabase<double>* db);
 template void compute_unassigned<double*>(vector<vector<double*>>* ,vector<vector<double*>>* , vector<int>*, int, double**, int**, DistanceDatabase<double*>* db);
 
-void lsh_datatype(vector<vector<double>>* lsh_dataset, vector<vector<double>>* lsh_searchset, vector<int>* centroid_ids, int Grids, int k, int L, vector<int>** clusters, DistanceDatabase<double>* db){
+void lsh_datatype(vector<vector<double>>* lsh_dataset, vector<vector<double>>* lsh_searchset, vector<int>* centroid_ids, int Grids, int k, int L, double w, vector<int>** clusters, DistanceDatabase<double>* db){
 
     int data_size = lsh_dataset->size();
 
@@ -24,8 +24,6 @@ void lsh_datatype(vector<vector<double>>* lsh_dataset, vector<vector<double>>* l
     }
 
     /* ---- LSH model ---- */
-    //double w = 4*compute_window(lsh_dataset);
-    double w = 4500;
     LSH <double>* model = new LSH <double> (k, L, w);
     model->fit(lsh_dataset);
 
@@ -55,7 +53,7 @@ void lsh_datatype(vector<vector<double>>* lsh_dataset, vector<vector<double>>* l
 
 }
 
-void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>* lsh_searchset, vector<int>* centroid_ids, int Grids, int k, int L, vector<int>** clusters, DistanceDatabase<double*>* db){
+void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>* lsh_searchset, vector<int>* centroid_ids, int Grids, int k, int L, double w, vector<int>** clusters, DistanceDatabase<double*>* db){
 
     /* default 2D curves */
     int d = 2;
@@ -93,7 +91,6 @@ void lsh_datatype(vector<vector<double*>>* lsh_dataset, vector<vector<double*>>*
         Grid_Vectorization(delta, d, lsh_dataset, lsh_searchset, &data_vectored_curves, &search_vectored_curves);
 
         /* ---- LSH model ---- */
-        double w = 400;
         LSH<double>* model = new LSH<double>(k, L, w);
         model->fit(&data_vectored_curves);
 

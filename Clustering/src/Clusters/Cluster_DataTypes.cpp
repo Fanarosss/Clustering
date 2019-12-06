@@ -2,6 +2,7 @@
 #include "Cluster.h"
 #include "Helper_Functions.h"
 #include "Cluster_DataTypes.h"
+#include "LSH_Functions.h"
 
 using namespace std;
 
@@ -26,6 +27,33 @@ int Cluster_Vectors(string input_file, string config_file, string results_file, 
     cout << "Distances Dictionary completed!" << endl;
     cout << "Starting Program ..." << endl << endl;
 
+    cout << "Average Distance between Neighbors. (Default value for given datasets = 4800)" << endl;
+    double w = 4800;
+    bool computed_window = false;
+    /* pre processed w for the inverse assignment lsh */
+    while (!computed_window) {
+        char chw;
+        cout << "- Press 'W' or 'w' to compute window automatically." << endl << "- Press 'I' or 'i' to insert your value manually below." << endl << "- Press 'D' or 'd' for default value." << endl;
+        cin >> chw;
+        if (chw == 'w' || chw == 'W') {
+            cout << "Computing w ..." << endl;
+            w = 4*compute_window(&cluster_data);
+            cout << "Proceeding with w = " << w << endl;
+            computed_window = true;
+        } else if (chw == 'I' || chw == 'i') {
+            cout << "Insert w: ";
+            cin >> w;
+            cout << "Proceeding with w = " << w << endl;
+            computed_window = true;
+        } else if (chw == 'D' || chw == 'd') {
+            cout << "Default value for w" << endl;
+            cout << "Proceeding with w = " << w << endl;
+            computed_window = true;
+        } else {
+            cout << "<Unknown command>" << endl;
+        }
+    }
+
     ofstream results;
     results.open(results_file);
     for (int i = 0; i < Initializers.size(); i++){
@@ -37,7 +65,7 @@ int Cluster_Vectors(string input_file, string config_file, string results_file, 
 
                 /* Clustering Algorithm Execution */
                 auto start = chrono::high_resolution_clock::now();
-                Cluster <double>* cluster = new Cluster<double>(cluster_config, Initializers[i], Assigners[j], Updaters[k]);
+                Cluster <double>* cluster = new Cluster<double>(cluster_config, Initializers[i], Assigners[j], Updaters[k], w);
                 cluster->fit(&cluster_data, db);
                 auto finish = chrono::high_resolution_clock::now();
                 auto elapsed = finish - start;
@@ -123,6 +151,28 @@ int Cluster_Curves(string input_file, string config_file, string results_file, i
     cout << "Distances Dictionary completed!" << endl;
     cout << "Starting Program ..." << endl << endl;
 
+    cout << "Average Distance between Neighbors. (Default value for given datasets = 300)" << endl;
+    double w = 300;
+    bool computed_window = false;
+    /* pre processed w for the inverse assignment lsh */
+    while (!computed_window) {
+        char chw;
+        cout << "- Press 'I' or 'i' to insert your value manually below." << endl << "- Press 'D' or 'd' for default value." << endl;
+        cin >> chw;
+        if (chw == 'I' || chw == 'i') {
+            cout << "Insert w: ";
+            cin >> w;
+            cout << "Proceeding with w = " << w << endl;
+            computed_window = true;
+        } else if (chw == 'D' || chw == 'd') {
+            cout << "Default value for w" << endl;
+            cout << "Proceeding with w = " << w << endl;
+            computed_window = true;
+        } else {
+            cout << "<Unknown command>" << endl;
+        }
+    }
+
     ofstream results;
     results.open(results_file);
     for (int i = 0; i < Initializers.size(); i++){
@@ -134,7 +184,7 @@ int Cluster_Curves(string input_file, string config_file, string results_file, i
 
                 /* Clustering Algorithm Execution */
                 auto start = chrono::high_resolution_clock::now();
-                Cluster <double*>* cluster = new Cluster<double*>(cluster_config, Initializers[i], Assigners[j], Updaters[k]);
+                Cluster <double*>* cluster = new Cluster<double*>(cluster_config, Initializers[i], Assigners[j], Updaters[k], w);
                 cluster->fit(&cluster_data, db);
                 auto finish = chrono::high_resolution_clock::now();
                 auto elapsed = finish - start;
