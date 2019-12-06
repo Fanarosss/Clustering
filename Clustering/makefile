@@ -2,13 +2,14 @@ GOOGLE_TEST_LIB = gtest
 GOOGLE_TEST_INCLUDE = /usr/local/include
 
 G++ = g++
-G++_GTEST_FLAGS = -c -Wall -I $(GOOGLE_TEST_INCLUDE) -I ./include
+G++_GTEST_FLAGS = -c -I $(GOOGLE_TEST_INCLUDE) -I ./include
 LD_GTEST_FLAGS = -L /usr/local/lib -l $(GOOGLE_TEST_LIB) -l pthread
-G++_FLAGS = -c -ggdb3 -I ./include
+G++_FLAGS = -c -I ./include
 
 all : cluster
 
 tests: gtest_main.o gtest_modulo.o gtest_database.o DistanceDatabase.o Helper_Functions.o
+	@echo "./build/execute_tests.x to run tests..."
 	g++ -std=c++11 -o ./build/gtest_modulo.o ./build/gtest_database.o ./build/DistanceDatabase.o ./build/Helper_Functions.o ./build/gtest_main.o $(LD_GTEST_FLAGS) -o ./build/execute_tests.x
 
 gtest_main.o :

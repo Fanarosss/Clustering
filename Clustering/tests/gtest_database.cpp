@@ -13,7 +13,8 @@ TEST(DatabaseTest, Vectors) {
     /* read test data */
     int* cluster_config = new int[4];
     vector<vector<double>> cluster_data;
-    ASSERT_EQ(1, Read_files(&cluster_data, cluster_config, input_file, config_file));
+    vector<string> item_ids;
+    ASSERT_EQ(1, Read_files(&cluster_data, cluster_config, input_file, config_file, &item_ids));
     /* build database */
     DistanceDatabase<double>* db = new DistanceDatabase<double>();
     db->calculate_distances(&cluster_data);
@@ -30,13 +31,14 @@ TEST(DatabaseTest, Curves) {
     /* read test data */
     int* cluster_config = new int[4];
     vector<vector<double*>> cluster_data;
-    ASSERT_EQ(1, Read_files(&cluster_data, cluster_config, input_file, config_file));
+    vector<string> item_ids;
+    ASSERT_EQ(1, Read_files(&cluster_data, cluster_config, input_file, config_file, &item_ids));
     /* build database */
     DistanceDatabase<double*>* db = new DistanceDatabase<double*>();
     db->calculate_distances(&cluster_data);
     /* run queries */
-    EXPECT_DOUBLE_EQ(1.1600861603205475, db->get_distance(0, 1));
-    EXPECT_DOUBLE_EQ(1.1600861603205475, db->get_distance(1, 0));
+    EXPECT_DOUBLE_EQ(0.57986771559476025, db->get_distance(0, 1));
+    EXPECT_DOUBLE_EQ(0.57986771559476025, db->get_distance(1, 0));
     /* free memory */
     delete (db);
 }
@@ -47,7 +49,8 @@ TEST(DatabasTest, OutOfBounds) {
     /* read test data */
     int* cluster_config = new int[4];
     vector<vector<double*>> cluster_data;
-    ASSERT_EQ(1, Read_files(&cluster_data, cluster_config, input_file, config_file));
+    vector<string> item_ids;
+    ASSERT_EQ(1, Read_files(&cluster_data, cluster_config, input_file, config_file, &item_ids));
     /* build database */
     DistanceDatabase<double*>* db = new DistanceDatabase<double*>();
     db->calculate_distances(&cluster_data);
