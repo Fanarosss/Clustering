@@ -1,5 +1,4 @@
 # Clustering with K-Means
-***
 Implemented K-Means and K-Medoids for vectors and curves with C++
 
 ### [Initializers:](https://github.com/Fanarosss/Clustering/blob/master/Clustering/src/Initializers/Initializers.cpp)
